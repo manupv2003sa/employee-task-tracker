@@ -24,6 +24,27 @@ async function createUser({name,email,password,role}) {
     return user;
 }
 
+
+async function updateUser(userId,data) {
+    const user= await User.findByPk(userId);
+
+    if(!user){
+        throw new Error("User not found");
+    }
+
+    const allowedFields =["name","email","role"];
+
+    for (const field of allowedFields){
+        if (data[field]!==undefined){
+            user[field]=data[field];
+        }
+    }
+    await user.save
+    return user;
+
+    
+}
 module.exports={
     createUser,
+    updateUser
 }
