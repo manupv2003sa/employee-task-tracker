@@ -1,5 +1,5 @@
 const { Model } = require("sequelize");
-const {createUser, updateUser}= require("../services/user.service.js");
+const {createUser, updateUser, deactivateUser:deactivateUserService}= require("../services/user.service.js");
 
 async function addUser(req,res) {
     try{
@@ -96,9 +96,41 @@ async function editUser(req,res) {
     
 }
 
+async function deactivateUser(req,res) {
+    try{
+        const user= await deactivateUserService(req.params.id);
+
+        return res.status(200).json({
+            success: true,
+      message: "User deactivated successfully",
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive,
+        },
+     });
+    }catch(error){
+        if (error.message==="User not found"){
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Failed to deactivate user",
+        });
+    }
+
+    
+}
+
 
 
 module.exports={
     addUser,
-    editUser
+    editUser,
+    deactivateUser,
 }

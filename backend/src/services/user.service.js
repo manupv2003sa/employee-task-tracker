@@ -40,11 +40,24 @@ async function updateUser(userId,data) {
         }
     }
     await user.save
-    return user;
+    return user;    
+}
 
+
+async function deactivateUser(userId) {
+    const user = await User.findByPk(userId)
+
+    if(!user){
+        throw new Error("User not found");
+    }
+    user.isActive=false;
+    await user.save();
+    return user;
     
 }
+
 module.exports={
     createUser,
-    updateUser
+    updateUser,
+    deactivateUser
 }
