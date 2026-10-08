@@ -1,13 +1,17 @@
-const express= require("express");
+const express = require("express");
+const authRoutes = require("./routes/auth.routes");
+
 const app = express();
 
 app.use(express.json());
 
-
-app.get("/api/health",(req,res)=>{
-    res.status(200).json({
-        sucesss:true,
-        message: "employee task is runnning"
-    });
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Employee Task Tracker API is running",
+  });
 });
-module.exports=app;
+
+app.use("/api/auth", authRoutes);
+
+module.exports = app;
