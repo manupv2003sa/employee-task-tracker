@@ -139,6 +139,10 @@ async function getUsers(req,res) {
         const page= Number(req.query.page|| 1);
         const limit = Number(req.query.limit || 10);
 
+
+        const sortBy=req.query.sortBy || "createdAt";
+        const sortOrder=req.query.sortOrder || "desc";
+
         if (!Number.isInteger(page) || page<1){
             return res.status(400).json({
                 success : false,
@@ -153,8 +157,10 @@ async function getUsers(req,res) {
 
         const result= await getUsersService(
             search,
-            Number(page),
-            Number(limit));
+            page,
+            limit,
+            sortBy,
+            sortOrder);
 
         const totalPages= Math.ceil(result.total/Number(limit))
         return res.status(200).json({

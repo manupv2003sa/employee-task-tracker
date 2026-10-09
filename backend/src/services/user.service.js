@@ -58,7 +58,12 @@ async function deactivateUser(userId) {
     
 }
 
-async function getUsers(search,page=1,limit=10) {
+async function getUsers(
+    search,
+    page=1,
+    limit=10,
+    sortBy="createdAt",
+    sortOrder="desc") {
     const where = {};
 
     if (search) {
@@ -76,12 +81,35 @@ async function getUsers(search,page=1,limit=10) {
         ];
     }
 
+    const allowedSortField=["name","email","role","createdAt"];
+
+    const allowedSortOrders=["asc","desc"];
+
+    if (!allowedSortField.includes(sortBy)){
+        sortBy="createdAt";
+    }
+
+    if (!allowedSortOrders.includes(sortOrder.toLowerCase())){
+        sortOrder="desc";
+    }
+
+
     const offset =(page-1)*limit;
 
     const {rows,count} = await User.findAndCountAll({
         where,
+        attributes:[
+            "id",
+            "name",
+            "email",
+            "role",
+            "isActive",
+            "createdAt",
+            "updatedAt"
+        ],
         limit,
-        offset
+        offset,
+        order:[[sortBy,sortOrder.toUpperCase()]]
     });
 
     return{
