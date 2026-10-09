@@ -1,5 +1,5 @@
 const express =require("express");
-const { addUser,editUser, getUsers } = require("../controllers/user.controller");
+const { addUser,editUser, getUsers, getTasks } = require("../controllers/user.controller");
 const { authenticateToken } = require("../middlewares/auth.middleware");
 const { authorizeRoles } = require("../middlewares/role.middleware");
 const { deactivateUser } = require("../controllers/user.controller");
@@ -31,4 +31,6 @@ router.get(
     authorizeRoles("ADMIN"),
     getUsers
 );
+
+
 module.exports=router;

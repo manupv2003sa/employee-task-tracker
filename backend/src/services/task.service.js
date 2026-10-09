@@ -1,5 +1,6 @@
 const { Model, Error } = require("sequelize");
 const {Task, User} = require("../models");
+const {Op} =require("sequelize");
 
 async function createTask(data,created_by) {
     const{title,
@@ -81,8 +82,34 @@ async function editTask(taskId,data) {
     return task;
 }
 
+async function searchTasks(search) {
+    const where={};
+
+    if (search){
+        where [Op.or]=[
+            {
+                title:{
+                    [Op.iLike]:`%${search}%`
+                }
+            },
+
+            {
+                description:{
+                    [Op.iLike]:`%${search}%`
+                }
+            }
+        ];
+    }
+    return await Task.findAll({
+        where,
+        order:[["createdAt","DESC"]]
+    });
+    
+}
+
 module.exports={
     createTask,
     assignTask,
-    editTask
+    editTask,
+    searchTasks,
 }
