@@ -1,4 +1,4 @@
-const { Model } = require("sequelize");
+const { Model, Error } = require("sequelize");
 const {Task, User} = require("../models");
 
 async function createTask(data,created_by) {
@@ -57,7 +57,32 @@ async function assignTask(taskId,assignedTo) {
     
 }
 
+async function editTask(taskId,data) {
+    const task= await Task.findByPk(taskId);
+
+    if(!task){
+        throw new Error("Task not found");
+    }
+    const {title,description,priority,status}=data;
+     const allowedFields = [
+        "title",
+        "description",
+        "priority",
+        "status"
+    ];
+
+    for (const field of allowedFields) {
+        if (data[field] !== undefined) {
+            task[field] = data[field];
+        }
+    }
+    
+    await task.save();
+    return task;
+}
+
 module.exports={
     createTask,
-    assignTask
+    assignTask,
+    editTask
 }

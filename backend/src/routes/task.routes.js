@@ -1,5 +1,5 @@
 const express=require("express");
-const {addTask, updateTaskAssignee}= require("../controllers/task.controller.js");
+const {addTask, updateTaskAssignee, updateTask}= require("../controllers/task.controller.js");
 const {authenticateToken}=require("../middlewares/auth.middleware.js");
 const {authorizeRoles} =require("../middlewares/role.middleware.js");
 
@@ -26,6 +26,13 @@ router.patch(
     authenticateToken,
     authorizeRoles("ADMIN", "MANAGER"),
     updateTaskAssignee
+);
+
+router.put(
+    "/:id",
+    authenticateToken,
+    authorizeRoles("ADMIN", "MANAGER"),
+    updateTask
 );
 
 module.exports=router;
