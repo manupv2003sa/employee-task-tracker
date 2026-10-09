@@ -115,15 +115,15 @@ async function updateTask(req,res) {
 
 async function getTasks(req,res) {
     try{
-        const {search,status, priority} = req.query;
-        const tasks =await searchTasks(search,status,priority);
+        const {search,status, priority, sortBy, order} = req.query;
+        const tasks =await searchTasks(search,status,priority, sortBy,order);
 
         return res.status(200).json({
             success:true,
             data:tasks
         });
     }catch(error){
-        return res.status(500).json({
+        return res.status(400).json({
             success:false,
             message:error.message
         });

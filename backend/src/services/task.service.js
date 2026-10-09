@@ -82,7 +82,7 @@ async function editTask(taskId,data) {
     return task;
 }
 
-async function searchTasks(search, status,priority) {
+async function searchTasks(search, status,priority, sortBy,order) {
     const where={};
 
     if (search){
@@ -101,17 +101,13 @@ async function searchTasks(search, status,priority) {
         ];
     }
 
+    //Filter : status
     const allowedStatuses = [
     "TODO",
     "IN_PROGRESS",
     "COMPLETED"
     ];
 
-    const allowedPriorities = [
-        "LOW",
-        "MEDIUM",
-        "HIGH"
-    ];
     if (status) {
         if (!allowedStatuses.includes(status)) {
             throw new Error("Invalid status");
@@ -119,6 +115,12 @@ async function searchTasks(search, status,priority) {
         where.status = status;
     }
 
+    // Filter: Priority
+    const allowedPriorities = [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+    ];
     if (priority) {
         if (!allowedPriorities.includes(priority)) {
             throw new Error("Invalid priority");
@@ -126,9 +128,26 @@ async function searchTasks(search, status,priority) {
         where.priority = priority;
     }
 
+    //Sorting
+
+    const allowedSortFields=["title","priority", "status", "createdAt"];
+
+    const allowedSortOrders = ["asc", "desc"];
+
+    const sortField = sortBy || "createdAt";
+    const sortOrder = order || "desc";
+
+    if (!allowedSortFields.includes(sortField)) {
+        throw new Error("Invalid sort field");
+    }
+
+    if (!allowedSortOrders.includes(sortOrder.toLowerCase())) {
+        throw new Error("Invalid sort order");
+    }
+
     return await Task.findAll({
         where,
-        order:[["createdAt","DESC"]]
+        order:[[sortField,sortOrder.toUpperCase()]]
     });
     
 }
