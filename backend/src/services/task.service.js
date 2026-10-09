@@ -82,7 +82,7 @@ async function editTask(taskId,data) {
     return task;
 }
 
-async function searchTasks(search) {
+async function searchTasks(search, status,priority) {
     const where={};
 
     if (search){
@@ -100,6 +100,32 @@ async function searchTasks(search) {
             }
         ];
     }
+
+    const allowedStatuses = [
+    "TODO",
+    "IN_PROGRESS",
+    "COMPLETED"
+    ];
+
+    const allowedPriorities = [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+    ];
+    if (status) {
+        if (!allowedStatuses.includes(status)) {
+            throw new Error("Invalid status");
+        }
+        where.status = status;
+    }
+
+    if (priority) {
+        if (!allowedPriorities.includes(priority)) {
+            throw new Error("Invalid priority");
+        }
+        where.priority = priority;
+    }
+
     return await Task.findAll({
         where,
         order:[["createdAt","DESC"]]
