@@ -5,6 +5,17 @@ const User = require("../../src/models/Users");
 
 const { hashPassword } = require("../../src/utils/password");
 
+async function getAdminToken() {
+  const loginResponse = await request(app)
+    .post("/api/auth/login")
+    .send({
+      email: "testadmin@example.com",
+      password: "TestAdmin@123",
+    });
+
+  return loginResponse.body.data.token;
+}
+
 describe("Employee Search", () => {
   test("ADMIN should be able to search employees by name", async () => {
 
@@ -44,14 +55,7 @@ describe("Employee Search", () => {
         },
     ]);
         
-    const loginResponse = await request(app)
-    .post("/api/auth/login")
-    .send({
-        email: "testadmin@example.com",
-         password: "TestAdmin@123",
-     });
-
-    const token = loginResponse.body.data.token;
+    const token = await getAdminToken();
 
 
     const response = await request(app)
@@ -66,14 +70,7 @@ describe("Employee Search", () => {
 
 
     test("ADMIN should be able to search employees case-insensitively", async () => {
-    const loginResponse = await request(app)
-        .post("/api/auth/login")
-        .send({
-        email: "testadmin@example.com",
-        password: "TestAdmin@123",
-        });
-
-    const token = loginResponse.body.data.token;
+    const token = await getAdminToken();
 
     const response = await request(app)
         .get("/api/users?search=manu")
@@ -87,15 +84,7 @@ describe("Employee Search", () => {
 
 
     test("ADMIN should get empty result when no employee matches", async () => {
-    const loginResponse = await request(app)
-        .post("/api/auth/login")
-        .send({
-        email: "testadmin@example.com",
-        password: "TestAdmin@123",
-        });
-
-    const token = loginResponse.body.data.token;
-
+    const token = await getAdminToken();
     const response = await request(app)
         .get("/api/users?search=xyznotfound")
         .set("Authorization", `Bearer ${token}`);
@@ -122,16 +111,15 @@ describe("Employee Search", () => {
         isActive: true,
     });
 
-  const loginResponse = await request(app)
-    .post("/api/auth/login")
-    .send({
-      email: "testuser@example.com",
-      password: "TestUser@123",
-    });
+    const loginResponse = await request(app)
+        .post("/api/auth/login")
+        .send({
+        email: "testuser@example.com",
+        password: "TestUser@123",
+        });
 
-  const token = loginResponse.body.data.token;
-
-  const response = await request(app)
+   const token = loginResponse.body.data.token;
+   const response = await request(app)
     .get("/api/users?search=Manu")
     .set("Authorization", `Bearer ${token}`);
 
