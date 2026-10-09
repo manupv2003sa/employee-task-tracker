@@ -1,5 +1,5 @@
 const express =require("express");
-const { addUser,editUser } = require("../controllers/user.controller");
+const { addUser,editUser, getUsers } = require("../controllers/user.controller");
 const { authenticateToken } = require("../middlewares/auth.middleware");
 const { authorizeRoles } = require("../middlewares/role.middleware");
 const { deactivateUser } = require("../controllers/user.controller");
@@ -23,5 +23,12 @@ router.patch("/:id/deactivate",
     authenticateToken,
     authorizeRoles("ADMIN"),
     deactivateUser
+);
+
+router.get(
+    "/",
+    authenticateToken,
+    authorizeRoles("ADMIN"),
+    getUsers
 );
 module.exports=router;

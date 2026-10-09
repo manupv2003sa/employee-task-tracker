@@ -1,5 +1,7 @@
 const { User } = require("../models");
 const {hashPassword} =require("../utils/password.js");
+const { Op } = require("sequelize");
+
 
 async function createUser({name,email,password,role}) {
     const existingUser= await User.findOne({
@@ -56,8 +58,35 @@ async function deactivateUser(userId) {
     
 }
 
+async function getUsers(search) {
+    const where = {};
+
+    if (search) {
+        where[Op.or] = [
+            {
+                name: {
+                    [Op.iLike]: `%${search}%`
+                }
+            },
+            {
+                email: {
+                    [Op.iLike]: `%${search}%`
+                }
+            }
+        ];
+    }
+
+    const users = await User.findAll({
+        where
+    });
+
+    return users;
+}
+
 module.exports={
     createUser,
     updateUser,
-    deactivateUser
+    deactivateUser,
+    getUsers
+
 }
