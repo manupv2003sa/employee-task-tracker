@@ -32,6 +32,32 @@ async function createTask(data,created_by) {
     
 }
 
+async function assignTask(taskId,assignedTo) {
+    const task= await Task.findByPk(taskId);
+
+    if (!task){
+        throw new Error("Task not found");
+    }
+
+    const assignedUser = await User.findOne({
+        where: {
+            id:assignedTo,
+            isActive:true
+        }
+    });
+
+    if(!assignedUser){
+        throw new Error("Assigned employee not found or inactive");
+    }
+
+    task.assignedTo=assignedTo;
+
+    await task.save();
+    return task;
+    
+}
+
 module.exports={
     createTask,
+    assignTask
 }

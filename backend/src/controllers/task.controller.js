@@ -1,4 +1,4 @@
-const {createTask}= require("..//services/task.service.js");
+const {createTask,  assignTask}= require("..//services/task.service.js");
 const { validate: isUUID } = require("uuid");
 
 async function addTask(req,res) {
@@ -47,6 +47,47 @@ async function addTask(req,res) {
     
 }
 
+
+async function updateTaskAssignee(req, res) {
+    try {
+        const { assignedTo } = req.body;
+        const { id } = req.params;
+    
+         if (!assignedTo) {
+            return res.status(400).json({
+                success: false,
+                message: "Assigned employee is required"
+            });
+        }
+        const task= await assignTask(id,assignedTo);
+
+        return res.status(200).json({
+            success:true,
+            data:task
+        });
+    }catch(error){
+        if (error.message==="Task not found"){
+            return res.status(404).json({
+                success:false,
+                message:error.message
+            });
+        }
+        if (error.message === "Assigned employee not found or inactive") {
+            return res.status(404).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+}
 module.exports={
-    addTask
-};
+    addTask,
+    updateTaskAssignee,
+}
