@@ -58,7 +58,7 @@ async function deactivateUser(userId) {
     
 }
 
-async function getUsers(search) {
+async function getUsers(search,page=1,limit=10) {
     const where = {};
 
     if (search) {
@@ -76,13 +76,21 @@ async function getUsers(search) {
         ];
     }
 
-    const users = await User.findAll({
-        where
+    const offset =(page-1)*limit;
+
+    const {rows,count} = await User.findAndCountAll({
+        where,
+        limit,
+        offset
     });
 
-    return users;
+    return{
+        users:rows,
+        total:count
+    };
 }
 
+ 
 module.exports={
     createUser,
     updateUser,
