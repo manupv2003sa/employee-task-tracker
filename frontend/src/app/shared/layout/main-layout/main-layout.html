@@ -1,0 +1,51 @@
+<div class="app-layout">
+    <aside class ="sidebar">
+        <div class="brand">
+            <div class="brand-icon">ET</div>
+            <span> Employee Task Tracker</span>
+        </div>
+
+        <nav class="navigation">
+            @for (item of visibleNavigationItems; track item.label){
+                <a
+                    [routerLink]="item.route"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact :true}"
+                    class="nav-item"
+                    >
+                <span>{{item.label}}</span>
+                </a>
+            }
+        </nav>
+
+
+        <button class="logout-button" type="button" (click)="logout()">
+            logout
+        </button>
+    </aside>
+
+
+    <div class="main-area">
+        <header class="topbar">
+            <div class="page-heading">
+                <span class="heading-label">WORKSPACE</span>
+                <h2>Employee Task Tracker</h2>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar">
+                    {{currentUser?.name?.charAt(0)?.toUpperCase() || 'U'}}
+                </div>
+
+                <div class="user-details">
+                    <strong>{{currentUser?.name || 'User'}}</strong>
+                    <span>{{currentUser?.role || "USER"}}</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <router-outlet/>
+        </main>
+     </div>
+</div>

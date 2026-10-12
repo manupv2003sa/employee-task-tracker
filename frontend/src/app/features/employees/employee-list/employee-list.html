@@ -1,0 +1,40 @@
+<section class="employee-page">
+    <div class="page-header">
+        <div>
+            <h1>Employee Management</h1>
+            <p>Manage your organization's employees and their roles.</p>
+        </div>
+    </div>
+
+    @if(isLoading){
+        <p>Loading employees</p>
+    }@else if(errorMessage){
+        <p class="error-message">{{errorMessage}}</p>
+    }@else{
+        <div class="employee-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (employee of employees; track employee.id){
+                        <tr>
+                            <td>{{employee.name}}</td>
+                            <td>{{employee.email}}</td>
+                            <td>{{employee.role}}</td>
+                            <td>
+                                <span class="status-active">Active</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

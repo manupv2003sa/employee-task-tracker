@@ -1,2 +1,74 @@
-<h1>Admin Dashboard</h1>
-<p>Welcome to the Employee Task Tracker.</p>
+
+<section class="dashboard">
+  <!-- Welcome section -->
+  <div class="welcome-section">
+    <div>
+      <h1>Welcome back, Admin!</h1>
+      <p>Here's what's happening in your organization.</p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+    }
+
+  <!-- Summary cards -->
+  <div class="summary-grid">
+    <article class="summary-card employees-card">
+      <div class="card-icon">E</div>
+      <div>
+        <h2>{{ isLoading ? '…' : totalEmployees }}</h2>
+        <p>Total Employees</p>
+      </div>
+    </article>
+
+    <article class="summary-card tasks-card">
+      <div class="card-icon">T</div>
+      <div>
+        <h2>{{ isLoading ? '…' : totalTasks }}</h2>
+        <p>Total Tasks</p>
+      </div>
+    </article>
+
+    <article class="summary-card progress-card">
+      <div class="card-icon">P</div>
+      <div>
+        <h2>{{ isLoading ? '…' : inProgressTasks }}</h2>
+        <p>In Progress</p>
+      </div>
+    </article>
+
+    <article class="summary-card completed-card">
+      <div class="card-icon">✓</div>
+      <div>
+        <h2>{{ isLoading ? '…' : completedTasks }}</h2>
+        <p>Completed</p>
+      </div>
+    </article>
+  </div>
+
+  <!-- Dashboard panels -->
+  <div class="dashboard-grid">
+    <section class="panel recent-tasks">
+      <div class="panel-header">
+        <h2>Recent Tasks</h2>
+        <a routerLink="/tasks">View All</a>
+      </div>
+
+      <p class="empty-message">
+        Task data will appear here when connected to the backend.
+      </p>
+    </section>
+
+    <section class="panel task-overview">
+      <div class="panel-header">
+        <h2>Task Status Overview</h2>
+      </div>
+
+      <p class="empty-message">
+        Task statistics will appear here when connected to the backend.
+      </p>
+    </section>
+  </div>
+</section>
+

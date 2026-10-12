@@ -1,0 +1,178 @@
+:host{
+    display:block;
+    min-height:100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #172033;
+}
+
+.app-layout{
+    display:flex;
+    min-height: 100vh;
+    background: #f5f7fb;
+}
+
+.sidebar{
+    width:250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 24px 16px;
+    background: #17263b;
+    color: #fff;
+}
+
+.brand{
+    display: flex;
+    align-items: center;
+    gap : 12px;
+    padding: 0  8px 32px;
+    font-size:17px;
+    font-weight: 700;
+}
+
+
+.brand-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #2563eb;
+    font-weight: 800;
+}
+
+.navigation{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.nav-item {
+    padding: 13px 14px;
+    border-radius: 9px;
+    color: #d4deec;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+
+.nav-item:hover,
+.nav-item.active {
+    background: #2855a0;
+    color: #fff;
+}
+
+
+.logout-button {
+    margin-top: auto;
+    padding: 13px 14px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+}
+
+
+.logout-button:hover {
+     background: #293a51;
+}
+
+
+.main-area {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background: #fff;
+    border-bottom: 1px solid #e7ebf2;
+}
+
+
+.heading-label {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.page-heading h2 {
+    margin: 5px 0 0;
+    font-size: 19px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-details strong {
+    font-size: 14px;
+}
+
+.user-details span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.page-content {
+    padding: 32px;
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        width: 155px;
+        padding: 16px 10px;
+    }
+
+    .brand {
+        padding: 0 2px 24px;
+        font-size: 13px;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .topbar {
+        padding: 16px;
+    }
+
+    .page-content {
+        padding: 18px;
+    }
+
+    .user-details {
+        display: none;
+    }
+}

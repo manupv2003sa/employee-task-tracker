@@ -1,0 +1,168 @@
+
+:host {
+  display: block;
+  color: #172033;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.welcome-section h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.welcome-section p {
+  margin: 0;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #2563eb;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.summary-card h2 {
+  margin: 0 0 6px;
+  font-size: 26px;
+}
+
+.summary-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.employees-card {
+  background: #eff6ff;
+  border-color: #dbeafe;
+}
+
+.tasks-card {
+  background: #f0fdf4;
+  border-color: #dcfce7;
+}
+
+.tasks-card .card-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.progress-card {
+  background: #fffbeb;
+  border-color: #fef3c7;
+}
+
+.progress-card .card-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.completed-card {
+  background: #fff1f2;
+  border-color: #ffe4e6;
+}
+
+.completed-card .card-icon {
+  background: #ffe4e6;
+  color: #e11d48;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e7ebf2;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(15 23 42 / 4%);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.panel-header a {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.panel-header a:hover {
+  text-decoration: underline;
+}
+
+.empty-message {
+  padding: 24px 12px;
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 550px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-section h1 {
+    font-size: 23px;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+}
