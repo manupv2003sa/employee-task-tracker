@@ -34,6 +34,7 @@ async function updateUser(userId,data) {
         throw new Error("User not found");
     }
 
+
     const allowedFields =["name","email","role","isActive"];
 
     for (const field of allowedFields){
@@ -41,8 +42,22 @@ async function updateUser(userId,data) {
             user[field]=data[field];
         }
     }
-    await user.save();
-    return user;    
+
+    try {
+        await user.save();
+    } catch (error) {
+    if (
+        error.name === 'SequelizeUniqueConstraintError' &&
+        error.fields?.email){
+            const duplicateError = new Error('Email already exists');
+            duplicateError.statusCode = 409;
+            throw duplicateError;
+         }
+
+        throw error;
+    }
+
+    return user;
 }
 
 

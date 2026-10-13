@@ -4,6 +4,7 @@ const {createUser,
     deactivateUser:deactivateUserService,
     getUsers:getUsersService,
 }= require("../services/user.service.js");
+const { Op } = require('sequelize');
 
 async function addUser(req,res) {
     try{
@@ -70,12 +71,14 @@ async function editUser(req,res) {
                 });
         }
 
+
         const user = await updateUser(req.params.id,{
             name,
             email,
             role,
             isActive
         });
+
         return res.status(200).json({
             success: true,
             message:"User updated successfully",
@@ -95,9 +98,16 @@ async function editUser(req,res) {
             });
         }
 
-        return res.status(500).json({
-            success:false,
-            message:"Failed to update user"
+        if (error.statusCode === 409) {
+            return res.status(409).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || 'Failed to update employee'
         });
     }
     
