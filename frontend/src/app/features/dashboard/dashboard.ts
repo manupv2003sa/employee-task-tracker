@@ -47,14 +47,63 @@ export class DashboardService {
 
     private apiUrl= 'http://localhost:3000/api';
 
-    getEmployees():Observable<EmployeeResponse>{
+
+    createEmployee(employee:{
+        name:string;
+        email:string;
+        password:string;
+        role:string;
+    }): Observable<ApiResponse<Employee>>{
+        return this.http.post<ApiResponse<Employee>>(
+            `${this.apiUrl}/users`,
+            employee
+        );
+            
+    };
+
+        
+    getEmployees(
+        page: number = 1,
+        limit: number = 5
+    ): Observable<EmployeeResponse> {
         return this.http.get<EmployeeResponse>(
-            `${this.apiUrl}/users`
+            `${this.apiUrl}/users`,
+            {
+                params: {
+                    page: page.toString(),
+                    limit: limit.toString()
+                }
+            }
         );
     }
+
+    updateEmployee(
+        id:string,
+        employee:{
+            name:string;
+            email:string;
+            role:string;
+            isActive: boolean;
+
+        }
+    ):Observable<ApiResponse<Employee>>{
+        return this.http.put<ApiResponse<Employee>>(
+            `${this.apiUrl}/users/${id}`,
+            employee
+        );
+    }
+
     getTasks(): Observable<ApiResponse<Task[]>> {
         return this.http.get<ApiResponse<Task[]>>(
         `${this.apiUrl}/tasks`
+        );
+    }
+
+
+    deactivateEmployee(id:string):Observable<ApiResponse<Employee>>{
+        return this.http.patch<ApiResponse<Employee>>(
+            `${this.apiUrl}/users/${id}/deactivate`,
+            {}
         );
     }
 }
