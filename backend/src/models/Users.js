@@ -47,7 +47,9 @@ User.init(
     tableName: "users",
     underscored: true,
     timestamps: true,
-  }
+    paranoid: true,
+    deletedAt: "deleted_at",
+}
 );
 
 module.exports = User;

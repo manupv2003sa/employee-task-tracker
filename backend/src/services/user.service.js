@@ -34,14 +34,14 @@ async function updateUser(userId,data) {
         throw new Error("User not found");
     }
 
-    const allowedFields =["name","email","role"];
+    const allowedFields =["name","email","role","isActive"];
 
     for (const field of allowedFields){
         if (data[field]!==undefined){
             user[field]=data[field];
         }
     }
-    await user.save
+    await user.save();
     return user;    
 }
 
@@ -52,8 +52,7 @@ async function deactivateUser(userId) {
     if(!user){
         throw new Error("User not found");
     }
-    user.isActive=false;
-    await user.save();
+    await user.destroy();
     return user;
     
 }

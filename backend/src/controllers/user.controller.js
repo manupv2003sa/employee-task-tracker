@@ -58,20 +58,23 @@ async function addUser(req,res) {
 
 async function editUser(req,res) {
     try{
-        const{name,email,role}=req.body;
+        const{name,email,role,isActive}=req.body;
 
-        if (!name && !email && !role){
-            return res.status(400).json({
-                success :false,
-                message:" At least one field is required"
-            });
+        if (name === undefined &&
+            email === undefined &&
+            role === undefined &&
+            isActive === undefined){
+                return res.status(400).json({
+                    success :false,
+                    message:" At least one field is required"
+                });
         }
 
         const user = await updateUser(req.params.id,{
             name,
             email,
             role,
-
+            isActive
         });
         return res.status(200).json({
             success: true,
