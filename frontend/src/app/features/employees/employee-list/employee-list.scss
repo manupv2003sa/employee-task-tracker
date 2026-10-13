@@ -5,10 +5,11 @@
 }
 
 .page-header {
-  display: flex;
+ display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  gap: 24px;
+  margin-bottom: 24px;
 
   h1 {
     margin: 0 0 8px;
@@ -40,17 +41,20 @@ table {
 }
 
 thead {
-  background: #f8fafc;
+  background: #f1f5f9;
 }
 
 th {
-  padding: 16px 20px;
-  color: #64748b;
+padding: 15px 20px;
+  background: #f1f5f9;
+  color: #334155;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  text-align: left;
   white-space: nowrap;
+  border-bottom: 1px solid #cbd5e1;
 }
 
 td {
@@ -78,6 +82,15 @@ tbody tr {
   font-weight: 600;
 }
 
+.status-inactive {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 12px;
+  font-weight: 600;
+}
 .error-message {
   padding: 12px 16px;
   border-radius: 8px;
@@ -433,24 +446,24 @@ tbody tr {
 }
 
 
+
 .add-employee-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 10px 18px;
-  margin-top: 16px;
+  margin-top: 0;
 
   background: #2563eb;
   color: #ffffff;
-
   border: none;
   border-radius: 8px;
 
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
+
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
@@ -466,4 +479,265 @@ tbody tr {
   &:active {
     transform: translateY(1px);
   }
+}
+
+.employee-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.employee-search {
+  width: 280px;
+  height: 42px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f2937;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.employee-search:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.employee-search::placeholder {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .employee-toolbar {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .employee-search {
+    flex: 1;
+    min-width: 180px;
+    width: auto;
+  }
+}
+
+/* Filter wrapper */
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Main Filter button */
+.filter-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d7deea;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #24324a;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-button:hover {
+  background: #f8fafc;
+  border-color: #b8c6da;
+}
+
+.filter-button:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+/* Dropdown menu */
+.filter-menu {
+  overflow: visible;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  width: 236px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #dce3ed;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  z-index: 1000;
+  color: #24324a;
+}
+
+/* Name, Email, Status and Role rows */
+.filter-menu-item {
+  width: 100%;
+  position: relative;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #24324a;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.filter-menu-item:hover {
+  background: #f1f5f9;
+}
+
+/* Submenu container */
+.filter-submenu {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 0;
+  width: 180px;
+  margin: 0;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #dce3ed;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  z-index: 1001;
+  border-left: 1px solid #dce3ed;
+}
+/* Submenu options */
+.filter-option {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.filter-option:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.filter-option.selected {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+
+.filter-option:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* Currently selected option */
+.filter-option.selected {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+/* Clear all button */
+.clear-filters-button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: none;
+  border-top: 1px solid #e8edf4;
+  border-radius: 0 0 6px 6px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.clear-filters-button:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Smaller screens */
+@media (max-width: 480px) {
+  .filter-menu {
+    width: 220px;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+
+
+
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.active-filters-label {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid #cbdafc;
+  border-radius: 20px;
+  background: #eef4ff;
+  color: #2859e8;
+  font-size: 13px;
+}
+
+.filter-chip button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.clear-active-filters {
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.clear-active-filters:hover {
+  color: #2859e8;
 }

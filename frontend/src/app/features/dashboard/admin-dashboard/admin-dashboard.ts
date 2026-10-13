@@ -42,9 +42,7 @@ export class AdminDashboard implements OnInit{
           this.employees = employees.data.filter(
             employee => employee.isActive
           );
-          this.totalEmployees = this.employees.length;
-
-          this.tasks = tasks.data;
+          this.totalEmployees = employees.pagination.total;          this.tasks = tasks.data;
           this.totalTasks = this.tasks.length;
 
           this.inProgressTasks = this.tasks.filter(

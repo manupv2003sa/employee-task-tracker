@@ -34,12 +34,12 @@ export class MainLayout {
     {
       label:"Dashoard",
       route:'/admin',
-      roles:["/ADMIN"]
+      roles:["ADMIN"]
     },
     {
       label:"Dashboard",
       route :"/manager",
-      roles:["/MANAGER"]
+      roles:["MANAGER"]
     },
       {
       label: 'Dashboard',

@@ -1,5 +1,5 @@
 
-import { Component, inject, OnInit, ChangeDetectorRef, } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, ElementRef, HostListener} from '@angular/core';
 import { DashboardService, Employee } from '../../dashboard/dashboard';
 import { FormsModule } from '@angular/forms';
 import { EmployeeAdd } from '../employee-add/employee-add';
@@ -14,6 +14,7 @@ import { EmployeeAdd } from '../employee-add/employee-add';
 export class EmployeeList implements OnInit {
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef);
+  private elementRef=inject(ElementRef);
   
 
   employees: Employee[] = [];
@@ -36,6 +37,19 @@ export class EmployeeList implements OnInit {
   pageSize = 5;
   totalEmployees = 0;
   totalPages = 0;
+  searchTerm: string = '';
+
+ // Filter menu state
+  isFilterOpen = false;
+  activeSubmenu = '';
+
+  // Selected filters
+  selectedRole = '';
+  selectedStatus = '';
+
+  // Sorting
+  sortBy = '';
+  sortOrder = 'asc';
 
   //Edit Option properties
   selectedEmployee :Employee | null=null;
@@ -50,8 +64,69 @@ export class EmployeeList implements OnInit {
 
   //Deactivate Handler
   successMessage = '';
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.isFilterOpen) {
+      return;
+    }
+
+    const clickedInside = this.elementRef.nativeElement
+      .querySelector('.filter-wrapper')
+      ?.contains(event.target as Node);
+
+    if (!clickedInside) {
+      this.closeFilterMenu();
+    }
+  } 
+
   ngOnInit(): void {
     this.loadEmployees();
+  }
+
+  
+  // Filter methods
+  toggleFilterMenu(): void {
+    this.isFilterOpen = !this.isFilterOpen;
+
+    if (!this.isFilterOpen) {
+      this.activeSubmenu = '';
+    }
+  }
+
+  toggleSubmenu(name: string): void {
+    this.activeSubmenu =
+      this.activeSubmenu === name ? '' : name;
+  }
+
+  setFilter(
+    key: 'role' | 'status',
+    value: string
+  ): void {
+    if (key === 'role') {
+      this.selectedRole = value;
+    } else {
+      this.selectedStatus = value;
+    }
+
+    this.currentPage = 1;
+    this.loadEmployees();
+  }
+
+  clearAllFilters(): void {
+    this.selectedRole = '';
+    this.selectedStatus = '';
+    this.sortBy = '';
+    this.sortOrder = 'asc';
+    this.activeSubmenu = '';
+
+    this.currentPage = 1;
+    this.loadEmployees();
+  }
+
+  closeFilterMenu(): void {
+    this.isFilterOpen = false;
+    this.activeSubmenu = '';
   }
 
   loadEmployees(): void {
@@ -59,7 +134,10 @@ export class EmployeeList implements OnInit {
     this.errorMessage = '';
 
     this.dashboardService
-      .getEmployees(this.currentPage, this.pageSize)
+      .getEmployees(this.currentPage, this.pageSize, this.searchTerm,  this.selectedRole,
+            this.selectedStatus,  this.sortBy || 'createdAt',   this.sortOrder
+
+      )
       .subscribe({
         next: (response) => {
           this.employees = response.data;
@@ -76,6 +154,11 @@ export class EmployeeList implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  onSearch():void{
+    this.currentPage=1;
+    this.loadEmployees();
   }
 
 
@@ -101,6 +184,18 @@ export class EmployeeList implements OnInit {
     this.editIsActive = employee.isActive;
     console.log('Selected employee for editing:', employee);
 
+  }
+  hasEditChanges(): boolean {
+    if (!this.selectedEmployee) {
+      return false;
+    }
+
+    return (
+      this.editName !== this.selectedEmployee.name ||
+      this.editEmail !== this.selectedEmployee.email ||
+      this.editRole !== this.selectedEmployee.role ||
+      this.editIsActive !== this.selectedEmployee.isActive
+    );
   }
 
   saveEmployee():void{
@@ -129,13 +224,22 @@ export class EmployeeList implements OnInit {
       .subscribe({
         next:()=>{
           this.isSaving=false;
+          this.editSuccess = 'Employee updated successfully';
           this.selectedEmployee = null;
           this.loadEmployees();
+
+          this.cdr.detectChanges();
+
         },
         error:(error)=>{
-          this.isSaving=false;
-          this.editError=error.error?.message || 'Failed to update employee'
 
+          console.error('Employee update failed:', error);
+
+
+          this.isSaving=false;
+
+          this.editError=error.error?.message || 'Failed to update employee'
+          this.cdr.detectChanges();
         }
       });
   }

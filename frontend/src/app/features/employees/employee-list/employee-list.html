@@ -1,135 +1,392 @@
 
 <section class="employee-page">
-    @if (showAddEmployee) {
-        <app-employee-add 
-            (employeeAdded)="onEmployeeAdded()"
-        />
-    }
+
+  @if (showAddEmployee) {
+    <app-employee-add
+      (employeeAdded)="onEmployeeAdded()"
+    />
+  }
+
   <div class="page-header">
     <div>
       <h1>Employee Management</h1>
       <p>Manage your organization's employees and their roles.</p>
+    </div>
+
+    <div class="employee-toolbar">
+      <input
+        type="text"
+        class="employee-search"
+        placeholder="Search by name or email..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearch()"
+      />
+      
+    <div class="filter-wrapper">
+    <button
+        type="button"
+        class="filter-button"
+        (click)="toggleFilterMenu()"
+        [attr.aria-expanded]="isFilterOpen"
+    >
+        <span>☷</span>
+        Filter
+        <span>⌄</span>
+    </button>
+
+    @if (isFilterOpen) {
+        
+        <div class="filter-menu">
+
+        <!-- Name -->
+        <button
+            type="button"
+            class="filter-menu-item"
+            (click)="toggleSubmenu('name')"
+            >
+            <span>Name</span>
+            <span>{{ activeSubmenu === 'name' ? '⌄' : '›' }}</span>
+        </button>
+        @if (activeSubmenu === 'name') {
+            <div class="filter-submenu">
+                <button
+                    type="button"
+                    class="filter-option"
+                    [class.selected]="sortBy === 'name' && sortOrder === 'asc'"
+                    (click)="sortBy = 'name'; sortOrder = 'asc'; currentPage = 1; loadEmployees()"
+                    >
+                    Name A–Z
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-option"
+                    [class.selected]="sortBy === 'name' && sortOrder === 'desc'"
+                    (click)="sortBy = 'name'; sortOrder = 'desc'; currentPage = 1; loadEmployees()"
+                    >
+                    Name Z–A
+                </button>
+            </div>
+        }
+        <!-- Email -->
+        <button
+            type="button"
+            class="filter-menu-item"
+            (click)="toggleSubmenu('email')"
+            >
+            <span>Email</span>
+            <span>{{ activeSubmenu === 'email' ? '⌄' : '›' }}</span>
+        </button>
+
+        @if (activeSubmenu === 'email') {
+            <div class="filter-submenu">
+                <button
+                    type="button"
+                    class="filter-option"
+                    [class.selected]="sortBy === 'email' && sortOrder === 'asc'"
+                    (click)="sortBy = 'email'; sortOrder = 'asc'; currentPage = 1; loadEmployees()"
+                    >
+                    Email A–Z
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-option"
+                    [class.selected]="sortBy === 'email' && sortOrder === 'desc'"
+                    (click)="sortBy = 'email'; sortOrder = 'desc'; currentPage = 1; loadEmployees()"
+                    >
+                    Email Z–A
+                </button>
+            </div>
+        }
+        <!-- Status -->
+        <button
+            type="button"
+            class="filter-menu-item"
+            (click)="toggleSubmenu('status')"
+            >
+            <span>Status</span>
+            <span>{{ activeSubmenu === 'status' ? '⌄' : '›' }}</span>
+        </button>
+        @if (activeSubmenu === 'status') {
+            <div class="filter-submenu">
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedStatus === ''"
+                (click)="setFilter('status', '')"
+                >
+                All
+                </button>
+
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedStatus === 'ACTIVE'"
+                (click)="setFilter('status', 'ACTIVE')"
+                >
+                Active
+                </button>
+
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedStatus === 'INACTIVE'"
+                (click)="setFilter('status', 'INACTIVE')"
+                >
+                Inactive
+                </button>
+            </div>
+            }
+
+        <!-- Role -->
+        <button
+            type="button"
+            class="filter-menu-item"
+            (click)="toggleSubmenu('role')"
+        >
+            <span>Role</span>
+            <span>{{ activeSubmenu === 'role' ? '⌄' : '›' }}</span>
+        </button>
+
+        @if (activeSubmenu === 'role') {
+            <div class="filter-submenu">
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedRole === ''"
+                (click)="setFilter('role', '')"
+                >
+                All
+                </button>
+
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedRole === 'ADMIN'"
+                (click)="setFilter('role', 'ADMIN')"
+                >
+                Admin
+                </button>
+
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedRole === 'MANAGER'"
+                (click)="setFilter('role', 'MANAGER')"
+                >
+                Manager
+                </button>
+
+                <button
+                type="button"
+                class="filter-option"
+                [class.selected]="selectedRole === 'USER'"
+                (click)="setFilter('role', 'USER')"
+                >
+                User
+                </button>
+            </div>
+        }
+      
+
+        <button
+            type="button"
+            class="clear-filters-button"
+            (click)="clearAllFilters()"
+        >
+            Clear all
+        </button>
+
+        </div>
+
+    }
+    </div>
+
+
       <button
         type="button"
         class="add-employee-btn"
         (click)="openAddEmployee()"
-        >
+      >
         + Add Employee
-    </button>
+      </button>
     </div>
   </div>
 
-  <!---->Edit option HTML
 
-    
-    @if (selectedEmployee) {
-    <div class="edit-form-overlay">
-        <section class="edit-form">
-        <div class="edit-form-header">
-            <div>
-            <h2>Edit Employee</h2>
-            <p>Update employee details and role.</p>
-            </div>
 
+
+  
+    <!-- Applied filters -->
+    @if (selectedRole || selectedStatus || sortBy) {
+    <div class="active-filters">
+        <span class="active-filters-label">Applied filters:</span>
+
+        @if (selectedRole) {
+        <span class="filter-chip">
+            Role: {{ selectedRole }}
             <button
-            type="button"
-            class="close-button"
-            (click)="selectedEmployee = null"
+                type="button"
+                aria-label="Remove role filter"
+                (click)="setFilter('role', '')"
             >
             &times;
             </button>
+        </span>
+        }
+
+        @if (selectedStatus) {
+        <span class="filter-chip">
+            Status: {{ selectedStatus }}
+            <button
+                type="button"
+                aria-label="Remove status filter"
+                (click)="setFilter('status', '')"
+            >
+            &times;
+            </button>
+        </span>
+        }
+
+        @if (sortBy) {
+        <span class="filter-chip">
+            {{ sortBy === 'name' ? 'Name' : 'Email' }}:
+            {{ sortOrder === 'asc' ? 'A–Z' : 'Z–A' }}
+            <button
+            type="button"
+            [attr.aria-label]="'Remove ' + sortBy + ' sorting'"
+            (click)="sortBy = ''; sortOrder = 'asc'; currentPage = 1; loadEmployees()"
+            >
+            &times;
+            </button>
+        </span>
+        }
+
+        <button
+        type="button"
+        class="clear-active-filters"
+        (click)="clearAllFilters()"
+        >
+        Clear all
+        </button>
+    </div>
+    }
+
+
+  <!-- Edit Employee Modal -->
+  @if (selectedEmployee) {
+    <div class="edit-form-overlay">
+      <section class="edit-form">
+
+        <div class="edit-form-header">
+          <div>
+            <h2>Edit Employee</h2>
+            <p>Update employee details and role.</p>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            (click)="selectedEmployee = null"
+          >
+            &times;
+          </button>
         </div>
 
         @if (editError) {
-            <p class="error-message">{{ editError }}</p>
+          <p class="error-message">{{ editError }}</p>
         }
 
         @if (editSuccess) {
-            <p class="success-message">{{ editSuccess }}</p>
+          <p class="success-message">{{ editSuccess }}</p>
         }
 
         <form>
-            <div class="form-field">
+          <div class="form-field">
             <label for="editName">Full Name</label>
             <input
-                id="editName"
-                type="text"
-                name="editName"
-                [(ngModel)]="editName"
-                (ngModelChange)="onNameChange($event)"
-                required
+              id="editName"
+              type="text"
+              name="editName"
+              [(ngModel)]="editName"
+              (ngModelChange)="onNameChange($event)"
+              required
             />
-            </div>
+          </div>
 
-            <div class="form-field">
+          <div class="form-field">
             <label for="editEmail">Email</label>
             <input
-                id="editEmail"
-                type="email"
-                name="editEmail"
-                [(ngModel)]="editEmail"
-                required
+              id="editEmail"
+              type="email"
+              name="editEmail"
+              [(ngModel)]="editEmail"
+              required
             />
-            </div>
+          </div>
 
-            <div class="form-field">
+          <div class="form-field">
             <label for="editRole">Role</label>
             <select
-                id="editRole"
-                name="editRole"
-                [(ngModel)]="editRole"
-                required
+              id="editRole"
+              name="editRole"
+              [(ngModel)]="editRole"
+              required
             >
-                <option value="ADMIN">Admin</option>
-                <option value="MANAGER">Manager</option>
-                <option value="USER">User</option>
+              <option value="ADMIN">Admin</option>
+              <option value="MANAGER">Manager</option>
+              <option value="USER">User</option>
             </select>
+          </div>
+
+          <div class="form-field">
             <label for="editStatus">Status</label>
             <select
-                id="editStatus"
-                name="editStatus"
-                [(ngModel)]="editIsActive"
-                required
+              id="editStatus"
+              name="editIsActive"
+              [(ngModel)]="editIsActive"
+              required
             >
-                <option [ngValue]="true">Active</option>
-                <option [ngValue]="false">Inactive</option>
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
             </select>
-            </div>
+          </div>
 
-            <div class="form-actions">
+          <div class="form-actions">
             <button
-                type="button"
-                class="cancel-button"
-                (click)="selectedEmployee = null"
+              type="button"
+              class="cancel-button"
+              (click)="selectedEmployee = null"
             >
-                Cancel
+              Cancel
             </button>
 
             <button
-                type="button"
-                class="save-button"
-                (click)="saveEmployee()"
-                [disabled]="isSaving"
+              type="button"
+              class="save-button"
+              (click)="saveEmployee()"
+              [disabled]="!hasEditChanges() || isSaving"
             >
-                {{ isSaving ? 'Saving...' : 'Save Changes' }}
+              {{ isSaving ? 'Saving...' : 'Save Changes' }}
             </button>
-            </div>
+          </div>
         </form>
-        </section>
+
+      </section>
     </div>
-    }
-    <!-- 
-    deletion message 
-    -->
-    @if (successMessage) {
+  }
+
+  <!-- Success and error messages -->
+  @if (successMessage) {
     <p class="success-message">{{ successMessage }}</p>
-    }
+  }
 
-    @if (errorMessage) {
+  @if (errorMessage) {
     <p class="error-message">{{ errorMessage }}</p>
-    }
+  }
 
-
+  <!-- Employee List -->
   @if (isLoading) {
     <p>Loading employees...</p>
   } @else if (errorMessage) {
@@ -153,29 +410,33 @@
               <td>{{ employee.name }}</td>
               <td>{{ employee.email }}</td>
               <td>{{ employee.role }}</td>
+
               <td>
                 <span
-                    [class.status-active]="employee.isActive"
-                    [class.status-inactive]="!employee.isActive">
-                    {{ employee.isActive ? 'Active' : 'Inactive' }}
+                  [class.status-active]="employee.isActive"
+                  [class.status-inactive]="!employee.isActive"
+                >
+                  {{ employee.isActive ? 'Active' : 'Inactive' }}
                 </span>
               </td>
+
               <td class="action-buttons">
                 <button
-                    type="button"
-                    class="edit-button"
-                    (click)="editEmployee(employee)"
+                  type="button"
+                  class="edit-button"
+                  (click)="editEmployee(employee)"
                 >
-                    Edit
+                  Edit
                 </button>
 
                 <button
-                    type="button"
-                    class="delete-button"
-                    (click)="deleteEmployee(employee)">
-                    Delete
+                  type="button"
+                  class="delete-button"
+                  (click)="deleteEmployee(employee)"
+                >
+                  Delete
                 </button>
-            </td>
+              </td>
             </tr>
           } @empty {
             <tr>
@@ -186,6 +447,7 @@
       </table>
     </div>
 
+    <!-- Pagination -->
     <div class="pagination">
       <div class="pagination-info">
         <label for="pageSize">Rows per page:</label>
@@ -230,5 +492,5 @@
       </div>
     </div>
   }
-</section>
 
+</section>

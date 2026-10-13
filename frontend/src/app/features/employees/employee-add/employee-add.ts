@@ -1,6 +1,7 @@
 import { Component,ChangeDetectorRef ,inject,Output, EventEmitter} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DashboardService } from '../../dashboard/dashboard';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   imports: [FormsModule],
   selector: 'app-employee-add',
@@ -61,8 +62,13 @@ export class EmployeeAdd {
       error:(error:unknown)=>{
         console.error('Failed to add employee',error);
 
-        this.errorMessage='Unable to add employee. Please try again';
-        this.isSubmitting=false;
+        if (error instanceof HttpErrorResponse) {
+          this.errorMessage = error.error?.message || 'Unable to add employee. Please try again';
+        } else {
+          this.errorMessage = 'Unable to add employee. Please try again';
+        }
+
+        this.isSubmitting = false;
         this.cdr.detectChanges();
       },
     })
