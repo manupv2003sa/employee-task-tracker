@@ -1,4 +1,4 @@
-const {createTask,  assignTask,  editTask, searchTasks}= require("..//services/task.service.js");
+const {createTask,  assignTask,  editTask, searchTasks, getMyTasks, updateMyTasksStatus }= require("..//services/task.service.js");
 const { validate: isUUID } = require("uuid");
 
 async function addTask(req,res) {
@@ -130,9 +130,80 @@ async function getTasks(req,res) {
     }
     
 }
+
+async function getMyTasksController(req,res) {
+    try{
+        const tasks = await getMyTasks(req.user.userId);
+
+        return res.status(200).json({
+            success :true,
+            data:tasks,
+        });
+
+    }catch{
+        return res.status(500).json({
+            success:false,
+            message : "Failed to retrieve your tasks",
+        })
+    }
+}
+
+async function updateMyTaskStatusController(req,res) {
+    try{
+        const {status} = req.body;
+
+        if(!status){
+            return res.status(400).json({
+                success:false,
+                message: "Task status is  required",
+            });
+        }
+
+        const task= await updateMyTasksStatus(
+            req.params.id,
+            req.user.userId,
+            status
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Task status updated successfully",
+            data: task,
+        });
+    }catch(error){
+        console.log(error)
+        if (error.message==="Task not found"){
+            return res.status(404).json({
+                success:false,
+                message:error.message
+            });
+        }
+
+        if (error.message === "You are not authorized to update this task") {
+            return res.status(403).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+         if (error.message === "Invalid task status") {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        return res.status(500).json({
+            success:false,
+            message : "Failed to update task status",
+        })
+    }
+}
 module.exports={
     addTask,
     updateTaskAssignee,
     updateTask,
-    getTasks
+    getTasks,
+    getMyTasksController,
+    updateMyTaskStatusController,
 }

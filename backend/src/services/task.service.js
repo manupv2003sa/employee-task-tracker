@@ -152,9 +152,43 @@ async function searchTasks(search, status,priority, sortBy,order) {
     
 }
 
+//User Task View
+async function getMyTasks(userId) {
+    return await Task.findAll({
+        where: {
+            assignedTo:userId,
+        },
+        order:[["createdAt","DESC"]],
+    })
+}
+
+async function updateMyTasksStatus(taskId, userId, status) {
+    const allowedStatuses=["TODO", "IN_PROGRESS","COMPLETED"];
+
+    if (!allowedStatuses.includes(status)){
+        throw new Error("Invalid task status");
+    }
+
+    const task = await Task.findByPk(taskId);
+    if(!task){
+        throw new Error("Task not found");
+    }
+
+    if (task.assignedTo !==userId){
+        throw new Error("You are not authorized to update this task");
+    }
+
+    task.status =status;
+    await task.save();
+
+    return task;
+}
+
 module.exports={
     createTask,
     assignTask,
     editTask,
     searchTasks,
+    getMyTasks,
+    updateMyTasksStatus
 }

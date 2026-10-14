@@ -1,5 +1,5 @@
 const express=require("express");
-const {addTask, updateTaskAssignee, updateTask, getTasks}= require("../controllers/task.controller.js");
+const {addTask, updateTaskAssignee, updateTask, getTasks, getMyTasksController, updateMyTaskStatusController}= require("../controllers/task.controller.js");
 const {authenticateToken}=require("../middlewares/auth.middleware.js");
 const {authorizeRoles} =require("../middlewares/role.middleware.js");
 
@@ -42,5 +42,17 @@ router.get(
     getTasks
 );
 
+router.get(
+    "/my",
+    authenticateToken,
+    authorizeRoles("USER"),
+    getMyTasksController,
+);
 
+router.patch(
+  "/:id/status",
+  authenticateToken,
+  authorizeRoles("USER"),
+  updateMyTaskStatusController
+);
 module.exports=router;
