@@ -77,7 +77,10 @@ async function getUsers(
     page=1,
     limit=10,
     sortBy="createdAt",
-    sortOrder="desc") {
+    sortOrder="desc",
+    role='',
+    status = ''
+) {
     const where = {};
 
     if (search) {
@@ -93,6 +96,29 @@ async function getUsers(
                 }
             }
         ];
+    }
+
+    const allowedRoles = ["ADMIN", "MANAGER", "USER"];
+
+    if (role) {
+        const normalizedRole = role.toUpperCase();
+
+        if (!allowedRoles.includes(normalizedRole)) {
+            throw new Error("Invalid role filter");
+        }
+
+        where.role = normalizedRole;
+    }
+    if (status) {
+        const normalizedStatus = status.toUpperCase();
+
+        if (normalizedStatus === "ACTIVE") {
+            where.isActive = true;
+        } else if (normalizedStatus === "INACTIVE") {
+            where.isActive = false;
+        } else {
+            throw new Error("Invalid status filter");
+        }
     }
 
     const allowedSortField=["name","email","role","createdAt"];
