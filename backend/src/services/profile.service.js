@@ -49,7 +49,7 @@ async function changePassword(userId,currentPassword, newPassword) {
     }
 
     const hashedPassword= await bcrypt.hash(newPassword,10);
-    user.password=hashedPassword;
+    user.passwordHash =hashedPassword;
 
     await user.save();
 

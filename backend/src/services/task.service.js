@@ -6,7 +6,8 @@ async function createTask(data,created_by) {
     const{title,
         description,
         priority,
-        assignedTo
+        assignedTo,
+        dueDate
     }=data;
 
     const assignedUser= await User.findOne({
@@ -27,6 +28,8 @@ async function createTask(data,created_by) {
         status:"TODO",
         createdBy:created_by,
         assignedTo,
+        dueDate: dueDate || null,
+
     });
 
     return task;
@@ -69,7 +72,8 @@ async function editTask(taskId,data) {
         "title",
         "description",
         "priority",
-        "status"
+        "status",
+        "dueDate",
     ];
 
     for (const field of allowedFields) {
@@ -147,6 +151,13 @@ async function searchTasks(search, status,priority, sortBy,order) {
 
     return await Task.findAll({
         where,
+        include:[
+            {
+            model:User,
+            as : "assignee",
+            attributes:["id", "name"],
+            },
+        ],
         order:[[sortField,sortOrder.toUpperCase()]]
     });
     

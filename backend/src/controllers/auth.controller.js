@@ -14,6 +14,13 @@ async function login(req, res) {
 
     const user = await authenticateUser(email, password);
 
+    if (user?.accountDeactivated) {
+        return res.status(403).json({
+            success: false,
+            message: "Your account has been deactivated. Please contact your administrator.",
+        });
+    }
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -37,7 +44,6 @@ async function login(req, res) {
       },
     });
   } catch (error) {
-    console.error("Login error", error);
 
     return res.status(500).json({
       success: false,

@@ -3,7 +3,7 @@ const { validate: isUUID } = require("uuid");
 
 async function addTask(req,res) {
     try{
-        const {title, description, priority, assignedTo}=req.body;
+        const {title, description, priority, assignedTo, dueDate}=req.body;
 
         if(!title || !assignedTo){
             return res.status(400).json({
@@ -24,6 +24,7 @@ async function addTask(req,res) {
                 description,
                 priority,
                 assignedTo,
+                dueDate,
             },
             req.user.userId
         );
@@ -40,7 +41,7 @@ async function addTask(req,res) {
             });
         }
         return res.status(500).json({
-            succcess :false,
+            success :false,
             message : error.message
         });
     }

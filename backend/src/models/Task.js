@@ -33,6 +33,12 @@ Task.init(
       defaultValue: "TODO",
     },
 
+    dueDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      field: "due_date",
+    },
+
     createdBy: {
       type: DataTypes.UUID,
       allowNull: false,

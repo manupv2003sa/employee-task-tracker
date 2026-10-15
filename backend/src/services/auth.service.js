@@ -6,12 +6,15 @@ async function authenticateUser(email,password) {
     const user=await User.findOne({
         where:{
             email,
-            isActive:true,
         },
     });
 
     if (!user){
         return null;
+    }
+
+    if (!user.isActive) {
+        return { accountDeactivated: true };
     }
 
     const isPasswordValid= await comparePassword(
