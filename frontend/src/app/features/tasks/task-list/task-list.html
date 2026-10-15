@@ -1,0 +1,174 @@
+
+<section class="task-page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">WORKSPACE</span>
+      <h2>Task Management</h2>
+      <p>View, search, and manage employee tasks.</p>
+    </div>
+
+    <div class="task-count">
+      <span>{{ filteredTasks.length }}</span>
+      <small>Tasks found</small>
+    </div>
+  </header>
+
+  <section class="filter-panel">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input
+        type="text"
+        placeholder="Search tasks..."
+        [(ngModel)]="search"
+      />
+    </div>
+ 
+    <select [(ngModel)]="status" aria-label="Filter by status">
+      <option value="">All Statuses</option>
+      <option value="TODO">To Do</option>
+      <option value="IN_PROGRESS">In Progress</option>
+      <option value="COMPLETED">Completed</option>
+    </select>
+
+    <select [(ngModel)]="priority" aria-label="Filter by priority">
+      <option value="">All Priorities</option>
+      <option value="HIGH">High</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="LOW">Low</option>
+    </select>
+
+    <select [(ngModel)]="sortBy" aria-label="Sort tasks by">
+      <option value="createdAt">Date Created</option>
+      <option value="dueDate">Due Date</option>
+      <option value="title">Task Title</option>
+      <option value="priority">Priority</option>
+      <option value="status">Status</option>
+    </select>
+
+    <select [(ngModel)]="order" aria-label="Sort direction">
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select>
+
+    <button type="button" class="clear-button" (click)="clearFilters()">
+      <span>↺</span> Clear
+    </button>
+
+    
+    <button
+        type="button"
+        class="create-button"
+        (click)="openCreateTask()"
+    >
+    <span>+</span> Create Task
+    </button>
+   
+
+  </section>
+
+  <div class="results-heading">
+    <h3>All Tasks</h3>
+    <span>Sorted by {{ sortLabel }}</span>
+  </div>
+
+  <p *ngIf="loading" class="message loading-message">
+    Loading tasks...
+  </p>
+
+  <p *ngIf="!loading && errorMessage" class="message error-message">
+    {{ errorMessage }}
+  </p>
+
+  <div class="task-grid" *ngIf="!loading && !errorMessage">
+    <article class="task-card" *ngFor="let task of filteredTasks">
+      <div class="card-top">
+        <span
+          class="priority"
+          [ngClass]="'priority-' + task.priority.toLowerCase()"
+        >
+          {{ task.priority }}
+        </span>
+
+        <span
+          class="status"
+          [ngClass]="'status-' + task.status.toLowerCase()"
+        >
+          {{ task.status.replace('_', ' ') }}
+        </span>
+      </div>
+
+      <h3 class="task-title">{{ task.title }}</h3>
+
+      <p class="task-description">
+        {{ task.description || 'No description provided.' }}
+      </p>
+
+
+            
+
+    <div class="assignee-row">
+    <div class="assignee-avatar">
+        {{ task.assignee?.name?.charAt(0)?.toUpperCase() || '?' }}
+    </div>
+
+    <div class="assignee-details">
+        <strong>{{ task.assignee?.name || 'Unassigned' }}</strong>
+        <small>Assigned employee</small>
+    </div>
+    </div>
+
+
+      <div class="due-date" [ngClass]="getDueDateClass(task.dueDate)">
+        <span class="date-icon">◷</span>
+
+        <div class="date-content">
+          <small>Due date</small>
+          <strong>
+            {{ task.dueDate ? (task.dueDate | date:'dd MMM yyyy') : 'Not set' }}
+          </strong>
+        </div>
+
+        <span class="due-label" *ngIf="task.dueDate">
+          {{ getDueDateLabel(task.dueDate) }}
+        </span>
+      </div>
+
+      <div class="card-footer">
+        <div class="created-date">
+          <span>Created</span>
+          <strong>{{ task.createdAt | date:'dd MMM yyyy' }}</strong>
+        </div>
+
+        <span class="task-id" title="{{ task.id }}">
+          #{{ task.id.substring(0, 8) }}
+        </span>
+      </div>
+    </article>
+
+    <div class="empty-state" *ngIf="filteredTasks.length === 0">
+      <div class="empty-icon">⌕</div>
+      <h3>No tasks found</h3>
+      <p>Try changing your search or filter criteria.</p>
+      <button type="button" (click)="clearFilters()">Clear filters</button>
+    </div>
+  </div>
+
+  <footer class="page-footer" *ngIf="!loading && !errorMessage">
+    Showing {{ filteredTasks.length }} of {{ tasks.length }} tasks
+  </footer>
+</section>
+
+<div class="modal-backdrop" *ngIf="showCreateForm">
+  <div class="modal-content">
+    <button
+      type="button"
+      class="modal-close"
+      (click)="closeCreateTask()"
+      aria-label="Close"
+    >
+      &times;
+    </button>
+
+    <app-task-form (cancel)="closeCreateTask()"></app-task-form>
+  </div>
+</div>

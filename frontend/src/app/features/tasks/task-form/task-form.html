@@ -1,0 +1,123 @@
+
+<div class="task-form-container">
+  <div class="form-header">
+    <h2>Create New Task</h2>
+    <p>Assign a task to an employee and set its due date.</p>
+  </div>
+
+  <form #taskForm="ngForm" (ngSubmit)="onSubmit(taskForm)" novalidate>
+    <!-- Task Title -->
+    <div class="form-group">
+      <label for="title">Task Title <span>*</span></label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        [(ngModel)]="task.title"
+        #title="ngModel"
+        required
+        maxlength="150"
+        placeholder="Enter task title"
+      />
+      <small class="field-error" *ngIf="title.invalid && title.touched">
+        Task title is required.
+      </small>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="task.description"
+        rows="4"
+        placeholder="Describe the task (optional)"
+      ></textarea>
+    </div>
+
+    <!-- Priority -->
+    <div class="form-group">
+      <label for="priority">Priority <span>*</span></label>
+      <select
+        id="priority"
+        name="priority"
+        [(ngModel)]="task.priority"
+        required
+      >
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+      </select>
+    </div>
+
+    <!-- Assigned Employee -->
+    <div class="form-group">
+      <label for="assignedTo">Assign Employee <span>*</span></label>
+
+      <select
+        id="assignedTo"
+        name="assignedTo"
+        [(ngModel)]="task.assignedTo"
+        #assignedTo="ngModel"
+        required
+      >
+        <option value="" disabled>
+          {{ isLoadingEmployees ? 'Loading employees...' : 'Select an employee' }}
+        </option>
+
+        <option *ngFor="let employee of employees" [value]="employee.id">
+          {{ employee.name }} ({{ employee.email }})
+        </option>
+      </select>
+
+      <small class="field-error" *ngIf="assignedTo.invalid && assignedTo.touched">
+        Please select an employee.
+      </small>
+
+      <small *ngIf="!isLoadingEmployees && employees.length === 0">
+        No active employees available.
+      </small>
+    </div>
+
+    <!-- Due Date -->
+    <div class="form-group">
+      <label for="dueDate">Due Date</label>
+      <input
+        type="date"
+        id="dueDate"
+        name="dueDate"
+        [(ngModel)]="task.dueDate"
+      />
+      <small class="field-hint">Optional — choose when the task should be completed.</small>
+    </div>
+
+    <!-- Messages -->
+    <div class="message success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="message error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+        <button
+            type="button"
+            class="cancel-button"
+            (click)="cancelCreateTask()"
+            [disabled]="isSubmitting"
+        >
+            Cancel
+        </button>
+
+        <button
+            type="submit"
+            class="submit-button"
+            [disabled]="taskForm.invalid || isSubmitting || isLoadingEmployees"
+        >
+            {{ isSubmitting ? 'Creating Task...' : 'Create Task' }}
+        </button>
+        </div>
+
+

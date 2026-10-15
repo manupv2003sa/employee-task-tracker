@@ -1,0 +1,72 @@
+
+<div class="profile-page">
+  <h2>My Profile</h2>
+  <p class="subtitle">View and manage your account information.</p>
+    <div *ngIf="isLoading">Loading profile</div>
+
+    <div *ngIf="errorMessage" class="message-error">
+        {{errorMessage}}
+    </div>
+
+    <div *ngIf="successMessage" class="message-success">
+        {{successMessage}}
+    </div>
+
+    <section *ngIf ="profile && !isLoading" class="profile-card">
+        <div class="profile-field">
+            <label>Full Name</label>
+
+            <input
+                *ngIf="isEditing"
+                type="text"
+                [(ngModel)]="editedName"
+                maxLength="100"
+                placeholder="Enter your name"
+            />
+
+            <p *ngIf ="!isEditing">{{profile.name}}</p>
+        </div>
+         <div class="profile-field">
+      <label>Email Address</label>
+      <p>{{ profile.email }}</p>
+    </div>
+
+    <div class="profile-field">
+      <label>Role</label>
+      <p>{{ profile.role }}</p>
+    </div>
+
+    <div class="profile-field">
+      <label>Account Status</label>
+      <p>{{ profile.isActive ? 'Active' : 'Inactive' }}</p>
+    </div>
+
+    <div class="actions">
+      <button
+        *ngIf="!isEditing"
+        type="button"
+        (click)="startEditing()"
+      >
+        Edit Profile
+      </button>
+
+      <ng-container *ngIf="isEditing">
+        <button
+          type="button"
+          (click)="saveProfile()"
+          [disabled]="isSaving"
+        >
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+
+        <button
+          type="button"
+          (click)="cancelEditing()"
+          [disabled]="isSaving"
+        >
+          Cancel
+        </button>
+      </ng-container>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,170 @@
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.dashboard {
+  padding: 24px;
+  color: #1e293b;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+  }
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  min-width: 0;
+
+  .card-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    font-size: 23px;
+  }
+
+  .card-info {
+    min-width: 0;
+  }
+
+  p {
+    margin: 0 0 8px;
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+  }
+}
+
+.total .card-icon {
+  background: #eff6ff;
+}
+
+.pending .card-icon {
+  background: #fff7ed;
+}
+
+.progress .card-icon {
+  background: #f5f3ff;
+}
+
+.completed .card-icon {
+  background: #ecfdf5;
+}
+
+.tasks-section {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.section-header {
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 650;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+
+  .empty-icon {
+    margin-bottom: 14px;
+    font-size: 36px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+  }
+
+  p {
+    max-width: 400px;
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 1000px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 16px;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summary-card {
+    padding: 18px;
+  }
+
+  .tasks-section {
+    padding: 18px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+}

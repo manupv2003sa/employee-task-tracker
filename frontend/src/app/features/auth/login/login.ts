@@ -22,6 +22,8 @@ export class Login {
 
   isLoading = signal(false);
   errorMessage = signal('');
+
+  showPassword = false;
   
   onSubmit(): void{
     if (this.loginForm.invalid || this.isLoading()){

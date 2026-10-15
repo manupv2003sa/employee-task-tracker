@@ -7,8 +7,10 @@ import { authGuard } from './features/auth/auth-guard';
 import { roleGuard } from './features/auth/role-guard';
 import { MainLayout } from './shared/layout/main-layout/main-layout';
 import { EmployeeList } from './features/employees/employee-list/employee-list';
-
-
+import { ProfileComponent } from './components/profile/profile';
+import { ChangePassword } from './components/change-password/change-password';
+import { TaskList } from './features/tasks/task-list/task-list';
+import { TaskForm } from './features/tasks/task-form/task-form';
 
 export const routes: Routes = [
 
@@ -49,7 +51,32 @@ export const routes: Routes = [
                 component:EmployeeList,
                 canActivate:[roleGuard],
                 data:{roles:['ADMIN']}
-            }
+            },
+            {
+                path:'profile',
+                component:ProfileComponent,
+                canActivate:[authGuard]
+
+            },
+            {
+                path:'change-password',
+                component:ChangePassword ,
+                canActivate:[authGuard]
+
+            },
+
+            {
+                path: 'tasks',
+                component: TaskList,
+                canActivate: [authGuard, roleGuard],
+                data: { roles: ['ADMIN', 'MANAGER'] }
+            },
+            {
+                path: 'tasks/create',
+                component: TaskForm,
+                canActivate: [authGuard, roleGuard],
+                data: { roles: ['ADMIN', 'MANAGER'] }
+            },
         ]
     },
     {
