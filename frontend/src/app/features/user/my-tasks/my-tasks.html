@@ -1,0 +1,132 @@
+<section class="my-tasks-page">
+
+  <div class="page-header">
+    <div>
+      <h1>My Tasks</h1>
+      <p>Only tasks assigned to you. You can update the status of each one.</p>
+    </div>
+
+  </div>
+
+  <!-- Error message -->
+  <div class="alert alert-error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Success message -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <!-- Status filters and search -->
+  <div class="toolbar">
+    <div class="status-tabs">
+      <button
+        type="button"
+        [class.active]="statusFilter === ''"
+        (click)="setStatusFilter('')">
+        All · {{ tasks.length }}
+      </button>
+
+      <button
+        type="button"
+        [class.active]="statusFilter === 'TODO'"
+        (click)="setStatusFilter('TODO')">
+        To Do · {{ todoCount }}
+      </button>
+
+      <button
+        type="button"
+        [class.active]="statusFilter === 'IN_PROGRESS'"
+        (click)="setStatusFilter('IN_PROGRESS')">
+        In Progress · {{ inProgressCount }}
+      </button>
+
+      <button
+        type="button"
+        [class.active]="statusFilter === 'COMPLETED'"
+        (click)="setStatusFilter('COMPLETED')">
+        Completed · {{ completedCount }}
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Loading -->
+  <div class="state-message" *ngIf="loading">
+    Loading your tasks...
+  </div>
+
+  <!-- Task list -->
+  <div
+    class="task-list"
+    *ngIf="!loading && filteredTasks.length > 0">
+
+    <article
+      class="task-row"
+      *ngFor="let task of filteredTasks"
+      [ngClass]="'border-' + task.priority.toLowerCase()">
+
+      <div class="task-info">
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description || 'No description provided.' }}</p>
+      </div>
+
+      <div class="priority-column">
+        <span
+          class="priority-badge"
+          [ngClass]="'priority-' + task.priority.toLowerCase()">
+          {{ task.priority }}
+        </span>
+      </div>
+
+      <div class="due-column">
+        <span class="column-label">Due</span>
+        <span class="due-date">
+            {{ task.dueDate ? (task.dueDate | date:'dd MMM yyyy') : 'Not set' }}
+        </span>
+    </div>
+
+      <div class="status-column">
+        <label [for]="'status-' + task.id">Status</label>
+
+        <select
+          [id]="'status-' + task.id"
+          [ngModel]="task.status"
+          [disabled]="updatingTaskId === task.id"
+          (ngModelChange)="updateStatus(task, $event)"
+          [attr.aria-label]="'Update status for ' + task.title">
+
+          <option value="TODO">To Do</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="COMPLETED">Completed</option>
+        </select>
+
+        <small *ngIf="updatingTaskId === task.id">
+          Updating...
+        </small>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    class="empty-state"
+    *ngIf="!loading && !errorMessage && tasks.length === 0">
+
+    <div class="empty-icon">☷</div>
+    <h3>No tasks assigned yet</h3>
+    <p>Tasks assigned to you by your manager or admin will appear here.</p>
+  </div>
+
+  <!-- No matching tasks -->
+  <div
+    class="empty-state"
+    *ngIf="!loading && tasks.length > 0 && filteredTasks.length === 0">
+
+    <h3>No tasks in this status</h3>
+    <p>Try selecting another status filter.</p>
+  </div>
+
+</section>

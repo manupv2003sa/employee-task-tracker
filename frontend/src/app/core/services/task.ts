@@ -51,8 +51,10 @@ export interface UpdateTaskRequest{
     description?: string;
     priority?: 'LOW' |"MEDIUM" |"HIGH";
     status?: 'TODO' | 'IN_PROGRESS' | 'COMPLETED';
-
+    dueDate?: string;
 }
+
+
 @Injectable({
     providedIn:"root"
 })
@@ -109,6 +111,8 @@ export class TaskService {
             `${this.apiUrl}/${id}/status`, { status }
         );
     }
+
+
 }
 
 

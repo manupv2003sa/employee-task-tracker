@@ -34,14 +34,29 @@ export class TaskList implements OnInit {
 
 
   showCreateForm =false;
+  selectedTask: TaskItem | null = null;
 
   openCreateTask():void{
     console.log("Pressed");
     this.showCreateForm=true;
+    this.selectedTask=null;
   }
 
   closeCreateTask() :void {
     this.showCreateForm=false;
+    this.selectedTask =null;
+
+  }
+
+  openEditTask(task: TaskItem): void {
+    this.selectedTask = task;
+    this.showCreateForm = true;
+  }
+
+  onTaskSaved(): void {
+    this.showCreateForm = false;
+    this.selectedTask = null;
+    this.loadTasks();
   }
 
   private readonly priorityRank: Record<string, number> = {

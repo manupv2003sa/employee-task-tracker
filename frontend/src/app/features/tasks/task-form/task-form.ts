@@ -1,10 +1,11 @@
 
-import { Component, OnInit, inject, ChangeDetectorRef , Output, EventEmitter, output } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef , Output, EventEmitter,Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DashboardService, Employee } from '../../dashboard/dashboard';
-import { TaskService, CreateTaskRequest } from '../../../core/services/task';
+import { TaskService, CreateTaskRequest, TaskItem ,UpdateTaskRequest} from '../../../core/services/task';
+import { TaskList } from '../task-list/task-list';
 
 @Component({
   selector: 'app-task-form',
@@ -13,15 +14,24 @@ import { TaskService, CreateTaskRequest } from '../../../core/services/task';
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
-export class TaskForm implements OnInit {
+export class TaskForm implements OnInit,OnChanges {
   private dashboardService = inject(DashboardService);
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
   
-  
+
+  @Input() selectedTask: TaskItem | null=null;
+  @Output() saved =new EventEmitter();
+
   @Output() cancel =new EventEmitter<void>();
 
+
+  get isEditMode(): boolean{
+    return !!this.selectedTask
+  }
   cancelCreateTask():void{
+    console.log('Cancel button clicked');
+
     this.cancel.emit();
   }
 
@@ -42,6 +52,18 @@ export class TaskForm implements OnInit {
 
   ngOnInit(): void {
     this.loadEmployees();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['selectedTask'] && this.selectedTask){
+      this.task={
+        title:this.selectedTask.title,
+        description: this.selectedTask.description ??'',
+        priority:this.selectedTask.priority,
+        assignedTo:this.selectedTask.assignedTo,
+        dueDate:this.selectedTask.dueDate ?? '',
+      };
+    }
   }
 
   loadEmployees(): void {
@@ -84,33 +106,43 @@ export class TaskForm implements OnInit {
       assignedTo: this.task.assignedTo,
       ...(this.task.dueDate ? { dueDate: this.task.dueDate } : {}),
     };
+    //ternary
+    const request = 
+          this.isEditMode && this.selectedTask 
+          ? this.taskService.updateTask(this.selectedTask.id,taskData) 
+          : this.taskService.createTask(taskData);
 
-    this.taskService.createTask(taskData).subscribe({
-      next: () => {
-        this.successMessage = 'Task created successfully.';
+    request.subscribe({
+      next:()=> {
+        this.successMessage =this.isEditMode ? 'Task updated successfully' : "Task created successfully";
 
-        this.task = {
-          title: '',
-          description: '',
-          priority: 'MEDIUM',
-          assignedTo: '',
-          dueDate: '',
-        };
+        this.isSubmitting=false;
+        this.cdr.detectChanges();
+
+        this.saved.emit();
+
+        if(!this.isEditMode){
+          this.task = {
+            title: '',
+            description: '',
+            priority: 'MEDIUM',
+            assignedTo: '',
+            dueDate: '',
+          };
 
         form.resetForm(this.task);
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
+        }
+
       },
-      error: (error: unknown) => {
-        console.error('Failed to create task:', error);
+      error:(error:unknown)=>{
+        console.error('Failed to save task:',error);
 
         this.errorMessage =
           error instanceof HttpErrorResponse
             ? error.error?.message || 'Unable to create task.'
             : 'Unable to create task.';
-
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
+           this.isSubmitting = false;
+           this.cdr.detectChanges();
       },
     });
   }

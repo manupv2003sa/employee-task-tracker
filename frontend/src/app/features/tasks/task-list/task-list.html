@@ -142,6 +142,14 @@
         <span class="task-id" title="{{ task.id }}">
           #{{ task.id.substring(0, 8) }}
         </span>
+
+          <button
+            type="button"
+            class="edit-button"
+            (click)="openEditTask(task)"
+          >
+            Edit
+          </button>
       </div>
     </article>
 
@@ -157,7 +165,6 @@
     Showing {{ filteredTasks.length }} of {{ tasks.length }} tasks
   </footer>
 </section>
-
 <div class="modal-backdrop" *ngIf="showCreateForm">
   <div class="modal-content">
     <button
@@ -169,6 +176,13 @@
       &times;
     </button>
 
-    <app-task-form (cancel)="closeCreateTask()"></app-task-form>
+
+    <app-task-form
+      [selectedTask]="selectedTask"
+      (saved)="onTaskSaved()"
+      (cancel)="showCreateForm = false; selectedTask = null"
+    ></app-task-form>
+
+    
   </div>
 </div>

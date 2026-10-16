@@ -1,7 +1,7 @@
 
 <div class="task-form-container">
   <div class="form-header">
-    <h2>Create New Task</h2>
+    <h2><h2>{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h2></h2>
     <p>Assign a task to an employee and set its due date.</p>
   </div>
 
@@ -115,9 +115,11 @@
             type="submit"
             class="submit-button"
             [disabled]="taskForm.invalid || isSubmitting || isLoadingEmployees"
-        >
-            {{ isSubmitting ? 'Creating Task...' : 'Create Task' }}
-        </button>
+            >
+              {{ isSubmitting
+                ? 'Saving...'
+                : (isEditMode ? 'Save Changes' : 'Create Task') }}        
+          </button>
         </div>
 
 

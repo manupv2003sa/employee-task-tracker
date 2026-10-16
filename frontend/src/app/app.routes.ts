@@ -11,6 +11,8 @@ import { ProfileComponent } from './components/profile/profile';
 import { ChangePassword } from './components/change-password/change-password';
 import { TaskList } from './features/tasks/task-list/task-list';
 import { TaskForm } from './features/tasks/task-form/task-form';
+import { MyTasks } from './features/user/my-tasks/my-tasks';
+
 
 export const routes: Routes = [
 
@@ -77,6 +79,12 @@ export const routes: Routes = [
                 canActivate: [authGuard, roleGuard],
                 data: { roles: ['ADMIN', 'MANAGER'] }
             },
+            {
+                path: 'my-tasks',
+                component: MyTasks,
+                canActivate: [authGuard, roleGuard],
+                data: { roles: ['USER'] }
+            }
         ]
     },
     {
