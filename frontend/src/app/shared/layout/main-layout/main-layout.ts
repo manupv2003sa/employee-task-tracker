@@ -1,4 +1,4 @@
-import { Component,inject } from '@angular/core';
+import { Component,inject,DestroyRef, OnInit ,ChangeDetectorRef } from '@angular/core';
 import {
   Router,
   RouterLink,
@@ -6,6 +6,7 @@ import {
   RouterOutlet
 } from '@angular/router';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../features/auth/auth';
 
 interface NavigationItem{
@@ -24,11 +25,23 @@ interface NavigationItem{
   styleUrl: './main-layout.scss',
   templateUrl: './main-layout.html',
 })
-export class MainLayout {
+export class MainLayout implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private destroyRef =inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
 
   currentUser =this.authService.getCurrentUser();
+
+  ngOnInit(): void {
+    this.authService.currentUser$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user =>{
+        this.currentUser =user;
+        this.cdr.detectChanges();
+
+      });
+  }
 
   navigationItems: NavigationItem[]=[
     {

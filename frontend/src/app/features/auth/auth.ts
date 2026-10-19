@@ -1,6 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
+
 import { Login } from "./login/login";
 import { LOCATION_UPGRADE_CONFIGURATION } from "@angular/common/upgrade";
 
@@ -18,15 +19,26 @@ export interface LoginResponse{
     };
 }
 
+export type CurrentUser = LoginResponse['data']['user'];
+
+
 @Injectable({
     providedIn:'root'
 })
 export class AuthService{
     private http = inject(HttpClient);
 
+   
     private apiUrl='http://localhost:3000/api/auth';
 
-    login(email:String, password:String):Observable<LoginResponse>{
+     private CurrentUserSubject = new BehaviorSubject<any | null>(
+        this.getCurrentUser()
+    );
+
+    currentUser$=this.CurrentUserSubject.asObservable();
+
+
+    login(email:String, password:string):Observable<LoginResponse>{
         return this.http.post<LoginResponse>(
             `${this.apiUrl}/login`,
             {email,password}
@@ -35,20 +47,43 @@ export class AuthService{
     saveSession(response:LoginResponse):void{
         localStorage.setItem('authToken',response.data.token);
         localStorage.setItem('currentUser',JSON.stringify(response.data.user));
+
+        this.CurrentUserSubject.next(response.data.user);
     }
 
     getToken():string | null{
         return localStorage.getItem('authToken');
     }
 
-    getCurrentUser(): LoginResponse['data']['user'] | null{
+    getCurrentUser(): CurrentUser | null{
         const user =localStorage.getItem('currentUser');
 
-        return user ? JSON.parse(user):null;
+        return user ? JSON.parse(user) as CurrentUser :null;
     }
-    
+
+    updateCurrentUserName(name: string): void {
+    const currentUser = this.getCurrentUser();
+
+    if (!currentUser) return;
+
+    const updatedUser: CurrentUser = {
+        id: currentUser.id,
+        name: name,
+        email: currentUser.email,
+        role: currentUser.role
+    };
+
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    this.CurrentUserSubject.next(updatedUser);
+
+    }
+
     logout(): void {
         localStorage.removeItem('authToken');
         localStorage.removeItem('currentUser');
+
+        this.CurrentUserSubject.next(null);
     }
+
+
 }

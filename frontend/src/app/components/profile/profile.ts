@@ -1,6 +1,8 @@
 import { Component,OnInit,inject,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../features/auth/auth';
+
 import { ProfileService, Profile } from '../../core/services/profile';
 @Component({
   imports: [FormsModule, CommonModule],
@@ -12,6 +14,7 @@ import { ProfileService, Profile } from '../../core/services/profile';
 export class ProfileComponent implements OnInit{
   private profileService = inject(ProfileService);
   private cdr = inject(ChangeDetectorRef);
+  private authService= inject(AuthService);
 
 
   profile : Profile | null = null;
@@ -89,11 +92,12 @@ export class ProfileComponent implements OnInit{
       next:(response)=>{
         if(response.data){
           this.profile=response.data;
+          this.authService.updateCurrentUserName(response.data.name);
         }else{
           this.profileLoad();
         }
 
-        this.editedName=name;
+        this.editedName=response.data?.name ?? name;
         this.isEditing=false;
         this.isSaving=false;
         this.cdr.detectChanges();

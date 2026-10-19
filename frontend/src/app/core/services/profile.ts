@@ -33,6 +33,7 @@ export interface ChangePasswordRequest{
     providedIn:'root'
 })
 export class ProfileService{
+
     private http = inject(HttpClient);
     private apiUrl ='http://localhost:3000/api/profile';
     
