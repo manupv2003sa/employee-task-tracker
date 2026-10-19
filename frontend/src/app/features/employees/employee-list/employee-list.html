@@ -16,7 +16,7 @@
     <div class="employee-toolbar">
       <input
         type="text"
-        class="employee-search"
+        class="employee-search"     
         placeholder="Search by name or email..."
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearch()"
@@ -421,21 +421,23 @@
               </td>
 
               <td class="action-buttons">
-                <button
-                  type="button"
-                  class="edit-button"
-                  (click)="editEmployee(employee)"
-                >
-                  Edit
-                </button>
+                @if (employee.id !== currentUser?.id) {
+                  <button
+                    type="button"
+                    class="edit-button"
+                    (click)="editEmployee(employee)"
+                  >
+                    Edit
+                  </button>
 
-                <button
-                  type="button"
-                  class="delete-button"
-                  (click)="deleteEmployee(employee)"
-                >
-                  Delete
-                </button>
+                  <button
+                    type="button"
+                    class="delete-button"
+                    (click)="deleteEmployee(employee)"
+                  >
+                    Delete
+                  </button>
+                }
               </td>
             </tr>
           } @empty {

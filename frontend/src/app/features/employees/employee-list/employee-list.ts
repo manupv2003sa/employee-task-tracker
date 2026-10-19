@@ -3,6 +3,7 @@ import { Component, inject, OnInit, ChangeDetectorRef, ElementRef, HostListener}
 import { DashboardService, Employee } from '../../dashboard/dashboard';
 import { FormsModule } from '@angular/forms';
 import { EmployeeAdd } from '../employee-add/employee-add';
+import { AuthService } from '../../auth/auth';
 
 @Component({
   selector: 'app-employee-list',
@@ -11,11 +12,15 @@ import { EmployeeAdd } from '../employee-add/employee-add';
   templateUrl: './employee-list.html',
   styleUrl: './employee-list.scss'
 })
+
 export class EmployeeList implements OnInit {
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef);
   private elementRef=inject(ElementRef);
   
+
+  private authService= inject(AuthService);
+  currentUser=this.authService.getCurrentUser();
 
   employees: Employee[] = [];
 

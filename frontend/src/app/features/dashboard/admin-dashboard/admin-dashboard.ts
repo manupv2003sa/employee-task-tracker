@@ -1,10 +1,13 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DashboardService, Employee, Task } from '../dashboard';
 import { forkJoin } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { AuthService } from '../../auth/auth';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, DatePipe, CommonModule],
   selector: 'app-admin-dashboard',
   styleUrl: './admin-dashboard.scss',
   templateUrl: './admin-dashboard.html',
@@ -13,18 +16,30 @@ export class AdminDashboard implements OnInit{
 
   private cdr = inject(ChangeDetectorRef);
   private dashboardService = inject(DashboardService);
+  private authService =inject(AuthService);
 
+
+  currentRole = this.authService.getCurrentUser()?.role;
+ 
   employees: Employee[] =[];
   tasks: Task[] = [];
 
   totalEmployees =0;
   totalTasks=0;
   inProgressTasks =0;
-  completedTasks =0;
+  todoTasks =0;
 
   isLoading= true;
   errorMessage='';
 
+  //For shared Dashboard service of Manager
+  myTasks = 0;
+
+  todayDate = new Date();
+
+  tomorrowDate = new Date(
+  new Date().setDate(new Date().getDate() + 1)
+);
   ngOnInit(): void {
     this.loadDashboard();
   }
@@ -49,8 +64,8 @@ export class AdminDashboard implements OnInit{
             task => task.status === 'IN_PROGRESS'
           ).length;
 
-          this.completedTasks = this.tasks.filter(
-            task => task.status === 'COMPLETED'
+          this.todoTasks = this.tasks.filter(
+            task => task.status === 'TODO'
           ).length;
 
           this.isLoading = false;
@@ -66,14 +81,35 @@ export class AdminDashboard implements OnInit{
       });
     }
 
-  get recentTasks(): Task[] {
-      return [...this.tasks]
-        .sort(
-          (a, b) =>
-            new Date(b.updatedAt).getTime() -
-            new Date(a.updatedAt).getTime()
-        )
-        .slice(0, 5);
+    get recentTasks(): Task[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return this.tasks
+      .filter(task => task.status !== 'COMPLETED')
+      .sort((a, b) => {
+        // Tasks with due dates come before tasks without due dates.
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+
+        const dateA = new Date(a.dueDate).getTime();
+        const dateB = new Date(b.dueDate).getTime();
+
+        // Sort by nearest due date first.
+        if (dateA !== dateB) {
+          return dateA - dateB;
+        }
+
+        // If dates match, HIGH priority comes first.
+        const priorityRank = {
+          HIGH: 1,
+          MEDIUM: 2,
+          LOW: 3,
+        };
+
+        return priorityRank[a.priority] - priorityRank[b.priority];
+      })
+      .slice(0, 5);
   }
 
 

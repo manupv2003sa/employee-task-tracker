@@ -1,58 +1,132 @@
 
-<div class="dashboard">
-  <div class="page-header">
+<section class="dashboard-page">
+
+  <header class="page-header">
     <div>
-      <h1>My Dashboard</h1>
+      <h1>Dashboard</h1>
       <p>Welcome back! Here's an overview of your tasks.</p>
     </div>
+  </header>
+
+  <div class="alert alert-error" *ngIf="errorMessage">
+    {{ errorMessage }}
+    <button type="button" (click)="loadDashboard()">Retry</button>
   </div>
 
-  <section class="summary-cards">
-    <div class="summary-card total">
-      <div class="card-icon">📋</div>
-      <div class="card-info">
-        <p>Total Tasks</p>
-        <h2>0</h2>
-      </div>
+  <div class="loading-state" *ngIf="loading">
+    Loading your dashboard...
+  </div>
+
+  <ng-container *ngIf="!loading && !errorMessage">
+
+    <div class="summary-grid">
+
+      <article class="summary-card total-card">
+        <div class="card-top">
+          <span>Total Tasks</span>
+          <span class="card-icon">☷</span>
+        </div>
+        <h2>{{ totalCount }}</h2>
+        <p>Tasks assigned to you</p>
+      </article>
+
+      <article class="summary-card todo-card">
+        <div class="card-top">
+          <span>To Do</span>
+          <span class="card-icon">○</span>
+        </div>
+        <h2>{{ todoCount }}</h2>
+        <p>Tasks not started</p>
+      </article>
+
+      <article class="summary-card progress-card">
+        <div class="card-top">
+          <span>In Progress</span>
+          <span class="card-icon">◷</span>
+        </div>
+        <h2>{{ inProgressCount }}</h2>
+        <p>Tasks currently active</p>
+      </article>
+
+      <article class="summary-card completed-card">
+        <div class="card-top">
+          <span>Completed</span>
+          <span class="card-icon">✓</span>
+        </div>
+        <h2>{{ completedCount }}</h2>
+        <p>Tasks completed</p>
+      </article>
+
     </div>
 
-    <div class="summary-card pending">
-      <div class="card-icon">🕒</div>
-      <div class="card-info">
-        <p>Pending</p>
-        <h2>0</h2>
-      </div>
-    </div>
+    <section class="recent-section">
 
-    <div class="summary-card progress">
-      <div class="card-icon">⚡</div>
-      <div class="card-info">
-        <p>In Progress</p>
-        <h2>0</h2>
-      </div>
-    </div>
+      <div class="section-header">
+        <div>
+          <h2>Recent Tasks</h2>
+          <p>Your five most recently updated tasks.</p>
+        </div>
 
-    <div class="summary-card completed">
-      <div class="card-icon">✓</div>
-      <div class="card-info">
-        <p>Completed</p>
-        <h2>0</h2>
+        <a routerLink="/user/my-tasks" class="view-all-link">
+          View All Tasks →
+        </a>
       </div>
-    </div>
-  </section>
 
-  <section class="tasks-section">
-    <div class="section-header">
-      <div>
-        <h2>My Tasks</h2>
-        <p>Keep track of the work assigned to you.</p>
+      <div class="table-container" *ngIf="recentTasks.length > 0">
+        <table class="tasks-table">
+          <thead>
+            <tr>
+              <th>TASK</th>
+              <th>PRIORITY</th>
+              <th>DUE DATE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let task of recentTasks">
+              <td class="task-cell">
+                <strong [title]="task.title">{{ task.title }}</strong>
+                <p [title]="task.description || 'No description provided.'">
+                  {{ task.description || 'No description provided.' }}
+                </p>
+              </td>
+
+              <td>
+                <span
+                  class="priority-badge"
+                  [ngClass]="'priority-' + task.priority.toLowerCase()">
+                  {{ task.priority }}
+                </span>
+              </td>
+
+              <td>
+                <span class="due-date" [class.no-date]="!task.dueDate">
+                  {{ task.dueDate ? (task.dueDate | date:'dd MMM yyyy') : 'Not set' }}
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="'status-' + task.status.toLowerCase()">
+                  {{ task.status === 'TODO' ? 'To Do' :
+                     task.status === 'IN_PROGRESS' ? 'In Progress' :
+                     'Completed' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
 
-    <div class="empty-state">
-      <div class="empty-icon">📝</div>
-      <h3>Your tasks will appear here</h3>
-      <p>Tasks assigned to you by your manager or admin will be shown here.</p>
-    </div>
-  </section>
-</div>
+      <div class="empty-state" *ngIf="tasks.length === 0">
+        <div class="empty-icon">☷</div>
+        <h3>No tasks assigned yet</h3>
+        <p>Tasks assigned to you by your manager or admin will appear here.</p>
+      </div>
+
+    </section>
+
+  </ng-container>
+</section>

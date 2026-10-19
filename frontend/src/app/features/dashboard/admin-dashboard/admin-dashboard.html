@@ -1,26 +1,41 @@
 
 <section class="dashboard">
+
   <!-- Welcome section -->
   <div class="welcome-section">
     <div>
-      <h1>Welcome back, Admin!</h1>
+      <h1>Welcome back, {{ currentRole === 'ADMIN' ? 'Admin' : 'Manager' }}!</h1>
       <p>Here's what's happening in your organization.</p>
     </div>
   </div>
 
+  <!-- Error message -->
   @if (errorMessage) {
-        <p class="error-message">{{ errorMessage }}</p>
-    }
+    <p class="error-message">{{ errorMessage }}</p>
+  }
 
   <!-- Summary cards -->
   <div class="summary-grid">
-    <article class="summary-card employees-card">
-      <div class="card-icon">E</div>
-      <div>
-        <h2>{{ isLoading ? '…' : totalEmployees }}</h2>
-        <p>Total Employees</p>
-      </div>
-    </article>
+
+    @if(currentRole==="ADMIN"){
+
+      <article class="summary-card employees-card">
+        <div class="card-icon">E</div>
+        <div>
+          <h2>{{ isLoading ? '…' : totalEmployees }}</h2>
+          <p>Total Employees</p>
+        </div>
+      </article>
+    }@else if(currentRole==="MANAGER"){
+      <article class="summary-card employees-card">
+        <div class="card-icon">M</div>
+        <div>
+          <h2>{{ isLoading ? '…' : myTasks }}</h2>
+          <p>My Tasks</p>
+        </div>
+      </article>
+
+    }
 
     <article class="summary-card tasks-card">
       <div class="card-icon">T</div>
@@ -39,36 +54,229 @@
     </article>
 
     <article class="summary-card completed-card">
-      <div class="card-icon">✓</div>
+      <div class="card-icon">T</div>
       <div>
-        <h2>{{ isLoading ? '…' : completedTasks }}</h2>
-        <p>Completed</p>
+        <h2>{{ isLoading ? '…' : todoTasks }}</h2>
+        <p>To Do</p>
       </div>
     </article>
+
   </div>
 
   <!-- Dashboard panels -->
   <div class="dashboard-grid">
+
+    <!-- Important Tasks Table -->
     <section class="panel recent-tasks">
+
       <div class="panel-header">
-        <h2>Recent Tasks</h2>
-        <a routerLink="/tasks">View All</a>
+        <div>
+          <h2>Important Tasks</h2>
+          <p>Upcoming deadlines and unfinished work</p>
+        </div>
+
+        <a routerLink="/tasks" class="view-all-link">
+          View All
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
 
-      <p class="empty-message">
-        Task data will appear here when connected to the backend.
-      </p>
+      @if (isLoading) {
+
+        <p class="empty-message">Loading tasks...</p>
+
+      } @else if (recentTasks.length === 0) {
+
+        <div class="empty-message">
+          <h3>No pending tasks</h3>
+          <p>There are currently no unfinished tasks to display.</p>
+        </div>
+
+      } @else {
+
+        <div class="dashboard-table-wrapper">
+          <table class="dashboard-task-table">
+
+            <thead>
+              <tr>
+                <th class="dashboard-task-column">Task</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Assignee</th>
+                <th>Due Date</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (task of recentTasks; track task.id) {
+
+                <tr>
+
+                  <!-- Task title and description -->
+                  <td class="dashboard-task-column">
+                    <div class="dashboard-task-info">
+
+                      <strong
+                        class="dashboard-task-title"
+                        [title]="task.title"
+                      >
+                        {{ task.title }}
+                      </strong>
+
+                      <p
+                        class="dashboard-task-description"
+                        [title]="task.description || 'No description provided.'"
+                      >
+                        {{ task.description || 'No description provided.' }}
+                      </p>
+
+                    </div>
+                  </td>
+
+                  <!-- Priority -->
+                  <td>
+                    <span
+                      class="task-priority"
+                      [ngClass]="'priority-' + task.priority.toLowerCase()"
+                    >
+                      {{ task.priority }}
+                    </span>
+                  </td>
+
+                  <!-- Status -->
+                  <td>
+                    <span
+                      class="task-status"
+                      [ngClass]="'status-' + task.status.toLowerCase()"
+                    >
+                      {{ task.status.replace('_', ' ') }}
+                    </span>
+                  </td>
+
+                  <!-- Assignee without avatar -->
+                  <td>
+                    <span class="dashboard-assignee">
+                      {{ task.assignee?.name || 'Unassigned' }}
+                    </span>
+                  </td>
+
+                  <!-- Due date -->
+                  <td>
+                    @if (task.dueDate) {
+
+                      <div
+                        class="dashboard-due-date"
+                        [ngClass]="{
+                          'due-overdue': task.dueDate.substring(0, 10) < todayDate.toISOString().substring(0, 10),
+                          'due-today': task.dueDate.substring(0, 10) === todayDate.toISOString().substring(0, 10),
+                          'due-upcoming': task.dueDate.substring(0, 10) > todayDate.toISOString().substring(0, 10)
+                        }"
+                      >
+                        <strong>
+                          {{ task.dueDate | date:'dd MMM yyyy' }}
+                        </strong>
+                      </div>
+
+                    } @else {
+
+                      <span class="no-due-date">Not set</span>
+
+                    }
+                  </td>
+
+                </tr>
+
+              }
+            </tbody>
+
+          </table>
+        </div>
+
+      }
+
     </section>
 
+    <!-- Task Status Overview -->
     <section class="panel task-overview">
+
       <div class="panel-header">
-        <h2>Task Status Overview</h2>
+        <div>
+          <h2>Task Status Overview</h2>
+          <p>Distribution of task statuses</p>
+        </div>
       </div>
 
-      <p class="empty-message">
-        Task statistics will appear here when connected to the backend.
-      </p>
-    </section>
-  </div>
-</section>
+      @if (isLoading) {
 
+        <p class="empty-message">Loading task statistics...</p>
+
+      } @else if (totalTasks === 0) {
+
+        <p class="empty-message">No task statistics available.</p>
+
+      } @else {
+
+        <div class="status-overview-list">
+
+          <!-- To Do -->
+          <div class="overview-item">
+            <div class="overview-label">
+              <span class="overview-dot todo-dot"></span>
+              <span>To Do</span>
+              <strong>{{ todoTasks }}</strong>
+            </div>
+
+            <div class="overview-track">
+              <div
+                class="overview-bar todo-bar"
+                [style.width.%]="todoTasks / totalTasks * 100"
+              ></div>
+            </div>
+          </div>
+
+          <!-- In Progress -->
+          <div class="overview-item">
+            <div class="overview-label">
+              <span class="overview-dot progress-dot"></span>
+              <span>In Progress</span>
+              <strong>{{ inProgressTasks }}</strong>
+            </div>
+
+            <div class="overview-track">
+              <div
+                class="overview-bar progress-bar"
+                [style.width.%]="inProgressTasks / totalTasks * 100"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Completed -->
+          <div class="overview-item">
+            <div class="overview-label">
+              <span class="overview-dot completed-dot"></span>
+              <span>Completed</span>
+              <strong>{{ totalTasks - todoTasks - inProgressTasks }}</strong>
+            </div>
+
+            <div class="overview-track">
+              <div
+                class="overview-bar completed-bar"
+                [style.width.%]="(totalTasks - todoTasks - inProgressTasks) / totalTasks * 100"
+              ></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="overview-total">
+          <span>Total tasks</span>
+          <strong>{{ totalTasks }}</strong>
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+
+</section>

@@ -83,7 +83,7 @@ export const routes: Routes = [
                 path: 'my-tasks',
                 component: MyTasks,
                 canActivate: [authGuard, roleGuard],
-                data: { roles: ['USER'] }
+                data: { roles: ['USER',"MANAGER"] }
             }
         ]
     },

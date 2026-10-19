@@ -1,5 +1,6 @@
-
 <section class="task-page">
+
+  <!-- Page Header -->
   <header class="page-header">
     <div>
       <span class="eyebrow">WORKSPACE</span>
@@ -13,16 +14,19 @@
     </div>
   </header>
 
+  <!-- Filters -->
   <section class="filter-panel">
+
     <div class="search-box">
       <span class="search-icon">⌕</span>
       <input
         type="text"
-        placeholder="Search tasks..."
+        placeholder="Search tasks by title or description..."
         [(ngModel)]="search"
+        aria-label="Search tasks"
       />
     </div>
- 
+
     <select [(ngModel)]="status" aria-label="Filter by status">
       <option value="">All Statuses</option>
       <option value="TODO">To Do</option>
@@ -50,139 +54,211 @@
       <option value="asc">Ascending</option>
     </select>
 
-    <button type="button" class="clear-button" (click)="clearFilters()">
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()"
+    >
       <span>↺</span> Clear
     </button>
 
-    
     <button
-        type="button"
-        class="create-button"
-        (click)="openCreateTask()"
+      type="button"
+      class="create-button"
+      (click)="openCreateTask()"
     >
-    <span>+</span> Create Task
+      <span>+</span> Create Task
     </button>
-   
 
   </section>
 
+  <!-- Table Heading -->
   <div class="results-heading">
-    <h3>All Tasks</h3>
+    <div>
+      <h3>All Tasks</h3>
+      <p>Manage and track employee tasks</p>
+    </div>
+
     <span>Sorted by {{ sortLabel }}</span>
   </div>
 
+  <!-- Loading -->
   <p *ngIf="loading" class="message loading-message">
     Loading tasks...
   </p>
 
+  <!-- Error -->
   <p *ngIf="!loading && errorMessage" class="message error-message">
     {{ errorMessage }}
   </p>
 
-  <div class="task-grid" *ngIf="!loading && !errorMessage">
-    <article class="task-card" *ngFor="let task of filteredTasks">
-      <div class="card-top">
-        <span
-          class="priority"
-          [ngClass]="'priority-' + task.priority.toLowerCase()"
-        >
-          {{ task.priority }}
-        </span>
+  <!-- Task Table -->
+  <section
+    class="task-table-panel"
+    *ngIf="!loading && !errorMessage"
+  >
 
-        <span
-          class="status"
-          [ngClass]="'status-' + task.status.toLowerCase()"
-        >
-          {{ task.status.replace('_', ' ') }}
-        </span>
-      </div>
+    <div class="table-responsive">
+      <table class="task-table">
 
-      <h3 class="task-title">{{ task.title }}</h3>
+        <thead>
+          <tr>
+            <th class="number-column">#</th>
+            <th class="task-column">Task</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Assignee</th>
+            <th>Due Date</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
 
-      <p class="task-description">
-        {{ task.description || 'No description provided.' }}
-      </p>
+        <tbody>
 
+          <tr *ngFor="let task of filteredTasks; let i = index">
 
-            
+            <!-- Row Number -->
+            <td class="number-column">
+              {{ i + 1 }}
+            </td>
 
-    <div class="assignee-row">
-    <div class="assignee-avatar">
-        {{ task.assignee?.name?.charAt(0)?.toUpperCase() || '?' }}
+            <!-- Task Title and Truncated Description -->
+            <td class="task-column">
+              <div class="task-info">
+                <strong class="task-title" [title]="task.title">
+                  {{ task.title }}
+                </strong>
+
+                <p
+                  class="task-description"
+                  [title]="task.description || 'No description provided.'"
+                >
+                  {{ task.description || 'No description provided.' }}
+                </p>
+              </div>
+            </td>
+
+            <!-- Priority -->
+            <td>
+              <span
+                class="priority"
+                [ngClass]="'priority-' + task.priority.toLowerCase()"
+              >
+                {{ task.priority }}
+              </span>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <span
+                class="status"
+                [ngClass]="'status-' + task.status.toLowerCase()"
+              >
+                {{ task.status.replace('_', ' ') }}
+              </span>
+            </td>
+
+            <!-- Assignee: No Avatar -->
+            <td>
+              <span class="assignee-name">
+                {{ task.assignee?.name || 'Unassigned' }}
+              </span>
+            </td>
+
+            <!-- Due Date -->
+            <td>
+              <div
+                class="due-date-cell"
+                  [ngClass]="task.status === 'COMPLETED' ? '' : getDueDateClass(task.dueDate)"
+              >
+                <strong>
+                  {{
+                    task.dueDate
+                      ? (task.dueDate | date:'dd MMM yyyy')
+                      : 'Not set'
+                  }}
+                </strong>
+
+                @if (task.dueDate && task.status !== 'COMPLETED'){
+                  <small>
+                    {{getDueDateLabel(task.dueDate)}}
+                  </small>
+                }
+              </div>
+            </td>
+
+      
+
+            <!-- Edit Action -->
+            <td class="actions-column">
+              <button
+                type="button"
+                class="edit-button"
+                (click)="openEditTask(task)"
+                [attr.aria-label]="'Edit task ' + task.title"
+              >
+                Edit
+              </button>
+            </td>
+
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="filteredTasks.length === 0">
+            <td colspan="8">
+              <div class="empty-state">
+                <h3>No tasks found</h3>
+                <p>
+                  Try changing your search or filter criteria.
+                </p>
+
+                <button
+                  type="button"
+                  class="clear-button"
+                  (click)="clearFilters()"
+                >
+                  Clear filters
+                </button>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
     </div>
 
-    <div class="assignee-details">
-        <strong>{{ task.assignee?.name || 'Unassigned' }}</strong>
-        <small>Assigned employee</small>
-    </div>
-    </div>
+    <!-- Table Footer -->
+    <footer class="page-footer">
+      <span>
+        Showing {{ filteredTasks.length }} of {{ tasks.length }} tasks
+      </span>
+    </footer>
 
+  </section>
 
-      <div class="due-date" [ngClass]="getDueDateClass(task.dueDate)">
-        <span class="date-icon">◷</span>
-
-        <div class="date-content">
-          <small>Due date</small>
-          <strong>
-            {{ task.dueDate ? (task.dueDate | date:'dd MMM yyyy') : 'Not set' }}
-          </strong>
-        </div>
-
-        <span class="due-label" *ngIf="task.dueDate">
-          {{ getDueDateLabel(task.dueDate) }}
-        </span>
-      </div>
-
-      <div class="card-footer">
-        <div class="created-date">
-          <span>Created</span>
-          <strong>{{ task.createdAt | date:'dd MMM yyyy' }}</strong>
-        </div>
-
-        <span class="task-id" title="{{ task.id }}">
-          #{{ task.id.substring(0, 8) }}
-        </span>
-
-          <button
-            type="button"
-            class="edit-button"
-            (click)="openEditTask(task)"
-          >
-            Edit
-          </button>
-      </div>
-    </article>
-
-    <div class="empty-state" *ngIf="filteredTasks.length === 0">
-      <div class="empty-icon">⌕</div>
-      <h3>No tasks found</h3>
-      <p>Try changing your search or filter criteria.</p>
-      <button type="button" (click)="clearFilters()">Clear filters</button>
-    </div>
-  </div>
-
-  <footer class="page-footer" *ngIf="!loading && !errorMessage">
-    Showing {{ filteredTasks.length }} of {{ tasks.length }} tasks
-  </footer>
 </section>
+
+<!-- Create / Edit Task Modal -->
 <div class="modal-backdrop" *ngIf="showCreateForm">
+
   <div class="modal-content">
+
     <button
       type="button"
       class="modal-close"
       (click)="closeCreateTask()"
-      aria-label="Close"
+      aria-label="Close modal"
     >
       &times;
     </button>
 
-
     <app-task-form
       [selectedTask]="selectedTask"
       (saved)="onTaskSaved()"
-      (cancel)="showCreateForm = false; selectedTask = null"
+      (cancel)="closeCreateTask()"
     ></app-task-form>
 
-    
   </div>
+
 </div>

@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskItem, TaskService } from '../../../core/services/task';
 import { TaskForm } from '../task-form/task-form'; 
-import { Router } from '@angular/router';
 
 @Component({
   imports: [FormsModule, CommonModule,TaskForm],

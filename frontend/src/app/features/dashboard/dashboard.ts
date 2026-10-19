@@ -17,12 +17,18 @@ export interface Employee{
 
 export interface Task{
     id:string;
-    title:string;
-    description:string;
-    priority: 'LOW' | 'MEDIUM' | 'HIGH';
+    title: string;
+    description: string | null;
+    priority: 'LOW' |'MEDIUM' | 'HIGH';
     status: 'TODO' | 'IN_PROGRESS' | 'COMPLETED';
-    createdBy: string;
-    assignedTo: string;
+    createdBy:string;
+    assignedTo:string;
+
+    assignee:{
+        id:string,
+        name:string,
+    } | null;
+    dueDate: string | null;
     createdAt: string;
     updatedAt: string;
 }
