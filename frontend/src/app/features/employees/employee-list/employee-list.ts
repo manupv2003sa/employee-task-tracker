@@ -4,6 +4,7 @@ import { DashboardService, Employee } from '../../dashboard/dashboard';
 import { FormsModule } from '@angular/forms';
 import { EmployeeAdd } from '../employee-add/employee-add';
 import { AuthService } from '../../auth/auth';
+import { ToastService } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-employee-list',
@@ -14,6 +15,8 @@ import { AuthService } from '../../auth/auth';
 })
 
 export class EmployeeList implements OnInit {
+
+  private toastService = inject (ToastService);
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef);
   private elementRef=inject(ElementRef);
@@ -187,7 +190,6 @@ export class EmployeeList implements OnInit {
     this.editError = '';
     this.editSuccess = '';
     this.editIsActive = employee.isActive;
-    console.log('Selected employee for editing:', employee);
 
   }
   hasEditChanges(): boolean {
@@ -229,7 +231,7 @@ export class EmployeeList implements OnInit {
       .subscribe({
         next:()=>{
           this.isSaving=false;
-          this.editSuccess = 'Employee updated successfully';
+          this.toastService.success('Employee updated successfully');
           this.selectedEmployee = null;
           this.loadEmployees();
 
@@ -238,12 +240,9 @@ export class EmployeeList implements OnInit {
         },
         error:(error)=>{
 
-          console.error('Employee update failed:', error);
-
-
           this.isSaving=false;
 
-          this.editError=error.error?.message || 'Failed to update employee'
+          this.toastService.error(error.error?.message || 'Failed to update employee');
           this.cdr.detectChanges();
         }
       });
@@ -282,7 +281,6 @@ export class EmployeeList implements OnInit {
 
     this.dashboardService.deactivateEmployee(employee.id).subscribe({
       next: () => {
-        console.log('Delete successful. Removing employee:', employee.id);
 
         // Remove the soft-deleted employee from the current screen
         this.employees = this.employees.filter(
@@ -297,7 +295,7 @@ export class EmployeeList implements OnInit {
         );
         this.cdr.detectChanges();
 
-        this.successMessage = 'Employee deleted successfully.';
+         this.toastService.success('Employee deleted successfully.');
 
         // Move back if the current page is now beyond the last page
         if (this.currentPage > this.totalPages && this.currentPage > 1) {
@@ -307,7 +305,7 @@ export class EmployeeList implements OnInit {
       },
       error: (error: unknown) => {
         console.error('Failed to delete employee:', error);
-        this.errorMessage = 'Unable to delete employee.';
+         this.toastService.success('Unable to delete employee');
       }
     });
   }

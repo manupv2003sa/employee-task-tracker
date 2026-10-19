@@ -2,6 +2,8 @@ import { Component,OnInit,inject,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../features/auth/auth';
+import { ToastService } from '../../core/services/toast';
+
 
 import { ProfileService, Profile } from '../../core/services/profile';
 @Component({
@@ -15,6 +17,8 @@ export class ProfileComponent implements OnInit{
   private profileService = inject(ProfileService);
   private cdr = inject(ChangeDetectorRef);
   private authService= inject(AuthService);
+  private toastService = inject (ToastService);
+
 
 
   profile : Profile | null = null;
@@ -45,10 +49,7 @@ export class ProfileComponent implements OnInit{
       },
       error:(error)=>{
 
-      console.error('Profile error:', error);
-
-
-        this.errorMessage= error.error?.message || 'Failed to load profile.';
+        this.toastService.error(error.error?.message || 'Failed to load profile.');
         this.isLoading= false;
         this.cdr.detectChanges();
 
@@ -102,10 +103,10 @@ export class ProfileComponent implements OnInit{
         this.isSaving=false;
         this.cdr.detectChanges();
 
-        this.successMessage=response.message || 'Profile updated successfully.';
+          this.toastService.success(response.message || 'Profile updated successfully.');
       },
       error:(error)=>{
-        this.errorMessage= error.error?.message || "Failed to update profile" ;
+          this.toastService.error(error.error?.message || "Failed to update profile") ;
         this.isSaving=false;
         this.cdr.detectChanges();
 

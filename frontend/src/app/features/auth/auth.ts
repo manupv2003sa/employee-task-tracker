@@ -2,8 +2,6 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, BehaviorSubject } from "rxjs";
 
-import { Login } from "./login/login";
-import { LOCATION_UPGRADE_CONFIGURATION } from "@angular/common/upgrade";
 
 export interface LoginResponse{
     success: boolean;

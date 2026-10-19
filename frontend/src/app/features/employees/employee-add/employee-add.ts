@@ -2,6 +2,7 @@ import { Component,ChangeDetectorRef ,inject,Output, EventEmitter} from '@angula
 import { FormsModule, NgForm } from '@angular/forms';
 import { DashboardService } from '../../dashboard/dashboard';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ToastService } from '../../../core/services/toast';
 @Component({
   imports: [FormsModule],
   selector: 'app-employee-add',
@@ -11,8 +12,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class EmployeeAdd {
 
+
   @Output() employeeAdded = new EventEmitter<void>();
 
+  private toastService = inject(ToastService);
   private dashboardService= inject(DashboardService);
   private cdr= inject(ChangeDetectorRef);
   employee = {
@@ -45,7 +48,7 @@ export class EmployeeAdd {
     this.dashboardService.createEmployee(employeeData).subscribe({
       next:()=>{
         this.employeeAdded.emit();
-        this.successMessage="Employee added successfully";
+        this.toastService.success("Employee added successfully");
         
         this.employee={
           name: '',
@@ -63,9 +66,9 @@ export class EmployeeAdd {
         console.error('Failed to add employee',error);
 
         if (error instanceof HttpErrorResponse) {
-          this.errorMessage = error.error?.message || 'Unable to add employee. Please try again';
+          this.toastService.error(error.error?.message || 'Unable to add employee. Please try again');
         } else {
-          this.errorMessage = 'Unable to add employee. Please try again';
+          this.toastService.error('Unable to add employee. Please try again');
         }
 
         this.isSubmitting = false;

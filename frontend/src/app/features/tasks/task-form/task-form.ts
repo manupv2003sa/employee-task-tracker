@@ -6,6 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DashboardService, Employee } from '../../dashboard/dashboard';
 import { TaskService, CreateTaskRequest, TaskItem ,UpdateTaskRequest} from '../../../core/services/task';
 import { TaskList } from '../task-list/task-list';
+import { ToastService } from '../../../core/services/toast';
+
 
 @Component({
   selector: 'app-task-form',
@@ -18,6 +20,8 @@ export class TaskForm implements OnInit,OnChanges {
   private dashboardService = inject(DashboardService);
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
+  private toastService = inject (ToastService);
+
   
 
   @Input() selectedTask: TaskItem | null=null;
@@ -83,7 +87,7 @@ export class TaskForm implements OnInit,OnChanges {
         },
         error: (error: unknown) => {
           console.error('Failed to load employees:', error);
-          this.errorMessage = 'Unable to load employees.';
+            this.toastService.error('Unable to load employees.');
           this.isLoadingEmployees = false;
           this.cdr.detectChanges();
         },
@@ -114,7 +118,7 @@ export class TaskForm implements OnInit,OnChanges {
 
     request.subscribe({
       next:()=> {
-        this.successMessage =this.isEditMode ? 'Task updated successfully' : "Task created successfully";
+          this.toastService.success(this.isEditMode ? 'Task updated successfully' : "Task created successfully");
 
         this.isSubmitting=false;
         this.cdr.detectChanges();
@@ -137,10 +141,11 @@ export class TaskForm implements OnInit,OnChanges {
       error:(error:unknown)=>{
         console.error('Failed to save task:',error);
 
-        this.errorMessage =
-          error instanceof HttpErrorResponse
+          this.toastService.error(
+            error instanceof HttpErrorResponse
             ? error.error?.message || 'Unable to create task.'
-            : 'Unable to create task.';
+            : 'Unable to create task.'
+          );
            this.isSubmitting = false;
            this.cdr.detectChanges();
       },

@@ -165,6 +165,9 @@ async function searchTasks(search, status,priority, sortBy,order) {
 
 //User Task View
 async function getMyTasks(userId) {
+
+      console.log('Logged-in user ID:', userId);
+
     return await Task.findAll({
         where: {
             assignedTo:userId,

@@ -4,6 +4,8 @@ import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../core/services/profile';
 import { finalize } from 'rxjs';
+import { ToastService } from '../../core/services/toast';
+
 
 @Component({
   selector: 'app-change-password',
@@ -14,6 +16,7 @@ import { finalize } from 'rxjs';
 })
 export class ChangePassword {
   private profileService = inject(ProfileService);
+  private toastService = inject (ToastService);
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -69,7 +72,7 @@ export class ChangePassword {
     .pipe(finalize(() => this.isSaving = false))
     .subscribe({
       next: (response) => {
-        this.successMessage = response.message || 'Password changed successfully.';
+         this.toastService.success(response.message || 'Password changed successfully.');
 
         this.currentPassword = '';
         this.newPassword = '';
@@ -78,8 +81,8 @@ export class ChangePassword {
 
       },
       error: (error) => {
-        this.errorMessage =
-          error.error?.message || 'Unable to change password. Please try again.';
+          this.toastService.error(
+          error.error?.message || 'Unable to change password. Please try again.');
           this.cdr.detectChanges();
 
       }

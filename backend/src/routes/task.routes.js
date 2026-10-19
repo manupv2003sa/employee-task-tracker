@@ -45,14 +45,14 @@ router.get(
 router.get(
     "/my",
     authenticateToken,
-    authorizeRoles("USER"),
+    authorizeRoles("USER","MANAGER"),
     getMyTasksController,
 );
 
 router.patch(
   "/:id/status",
   authenticateToken,
-  authorizeRoles("USER"),
+  authorizeRoles("USER","MANAGER"),
   updateMyTaskStatusController
 );
 module.exports=router;
