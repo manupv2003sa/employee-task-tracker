@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskItem, TaskService } from '../../../core/services/task';
+import { TaskItem, TaskService } from '../task.service';
 import { TaskForm } from '../task-form/task-form'; 
 
 import { ToastService } from '../../../core/services/toast';

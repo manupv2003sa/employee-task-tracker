@@ -7,11 +7,11 @@ import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 import { MainLayout } from './shared/layout/main-layout/main-layout';
 import { EmployeeList } from './features/employees/employee-list/employee-list';
-import { ProfileComponent } from './components/profile/profile';
-import { ChangePassword } from './components/change-password/change-password';
+import { ProfileComponent } from './features/profile/profile/profile';
+import { ChangePassword } from './features/profile/change-password/change-password';
 import { TaskList } from './features/tasks/task-list/task-list';
 import { TaskForm } from './features/tasks/task-form/task-form';
-import { MyTasks } from './features/user/my-tasks/my-tasks';
+import { MyTasks } from './features/tasks/my-tasks/my-tasks';
 
 
 export const routes: Routes = [

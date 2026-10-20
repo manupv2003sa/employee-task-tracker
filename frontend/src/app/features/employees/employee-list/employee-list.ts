@@ -3,7 +3,7 @@ import { Component, inject, OnInit, ChangeDetectorRef, ElementRef, HostListener}
 import { DashboardService, Employee } from '../../dashboard/dashboard';
 import { FormsModule } from '@angular/forms';
 import { EmployeeAdd } from '../employee-add/employee-add';
-import { AuthService } from '../../auth/auth';
+import { AuthService } from '../../auth/auth.service';
 import { ToastService } from '../../../core/services/toast';
 
 @Component({

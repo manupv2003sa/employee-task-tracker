@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DashboardService, Employee } from '../../dashboard/dashboard';
-import { TaskService, CreateTaskRequest, TaskItem ,UpdateTaskRequest} from '../../../core/services/task';
+import { TaskService, CreateTaskRequest, TaskItem ,UpdateTaskRequest} from '../task.service';
 import { TaskList } from '../task-list/task-list';
 import { ToastService } from '../../../core/services/toast';
 

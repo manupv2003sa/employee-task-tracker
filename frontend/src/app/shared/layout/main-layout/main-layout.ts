@@ -7,7 +7,7 @@ import {
 } from '@angular/router';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthService } from '../../../features/auth/auth';
+import { AuthService } from '../../../features/auth/auth.service';
 
 interface NavigationItem{
   label:string;

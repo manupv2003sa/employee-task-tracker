@@ -1,7 +1,7 @@
 import { Component, OnInit, inject ,ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskItem, TaskService } from '../../../core/services/task';
+import { TaskItem, TaskService } from '../task.service';
 
 @Component({
   selector: 'app-my-tasks',

@@ -1,11 +1,9 @@
 import { Component,OnInit,inject,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../features/auth/auth';
-import { ToastService } from '../../core/services/toast';
-
-
-import { ProfileService, Profile } from '../../core/services/profile';
+import { AuthService } from '../../auth/auth.service';
+import { ToastService } from '../../../core/services/toast';
+import { ProfileService, Profile } from '../profile.service';
 @Component({
   imports: [FormsModule, CommonModule],
   standalone: true,

@@ -2,7 +2,7 @@
 import { Component, OnInit, inject ,ChangeDetectorRef} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TaskItem, TaskService } from '../../../core/services/task';
+import { TaskItem, TaskService } from '../../tasks/task.service';
 
 @Component({
   selector: 'app-user-dashboard',

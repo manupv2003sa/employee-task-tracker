@@ -1,7 +1,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { ProfileService } from './profile';
+import { ProfileService } from './profile.service';
 
 describe('ProfileService', () => {
   let service: ProfileService;

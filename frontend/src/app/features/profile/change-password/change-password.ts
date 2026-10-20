@@ -2,9 +2,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ProfileService } from '../../core/services/profile';
+import { ProfileService } from '../profile.service';
 import { finalize } from 'rxjs';
-import { ToastService } from '../../core/services/toast';
+import { ToastService } from '../../../core/services/toast';
 
 
 @Component({

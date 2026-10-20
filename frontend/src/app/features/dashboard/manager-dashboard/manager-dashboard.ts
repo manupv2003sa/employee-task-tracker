@@ -4,8 +4,8 @@ import { RouterLink } from '@angular/router';
 import { DashboardService, Employee, Task } from '../dashboard';
 import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { AuthService } from '../../auth/auth';
-import { TaskService } from '../../../core/services/task';
+import { AuthService } from '../../auth/auth.service';
+import { TaskService } from '../../tasks/task.service';
 
 @Component({
   imports: [RouterLink, DatePipe, CommonModule],
