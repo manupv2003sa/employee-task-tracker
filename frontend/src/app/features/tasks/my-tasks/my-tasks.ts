@@ -1,7 +1,8 @@
 import { Component, OnInit, inject ,ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskItem, TaskService } from '../task.service';
+import {  TaskService } from '../task.service';
+import { Task } from '../../../core/models/task.model';
 
 @Component({
   selector: 'app-my-tasks',
@@ -14,7 +15,7 @@ export class MyTasks implements OnInit {
   private taskService = inject(TaskService);
   private cdr =inject(ChangeDetectorRef);
 
-  tasks: TaskItem[] = [];
+  tasks: Task[] = [];
 
   loading = false;
   updatingTaskId: string | null = null;
@@ -22,7 +23,7 @@ export class MyTasks implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  statusFilter: '' | TaskItem['status'] = '';
+  statusFilter: '' | Task['status'] = '';
 
   ngOnInit(): void {
     this.loadMyTasks();
@@ -49,7 +50,7 @@ export class MyTasks implements OnInit {
     });
   }
 
-  get filteredTasks(): TaskItem[] {
+  get filteredTasks(): Task[] {
     return this.tasks.filter((task) => {
       return !this.statusFilter || task.status === this.statusFilter;
     });
@@ -75,14 +76,14 @@ export class MyTasks implements OnInit {
   }
 
   // Select a status filter
-  setStatusFilter(status: '' | TaskItem['status']): void {
+  setStatusFilter(status: '' | Task['status']): void {
     this.statusFilter = status;
   }
 
   // Update only the task status
   updateStatus(
-    task: TaskItem,
-    newStatus: TaskItem['status']
+    task: Task,
+    newStatus: Task['status']
   ): void {
     if (
       task.status === newStatus ||

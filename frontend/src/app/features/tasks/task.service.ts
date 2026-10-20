@@ -1,58 +1,16 @@
 import { Injectable,inject } from '@angular/core';
 import { HttpClient , HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Task } from '../dashboard/dashboard';
 
+import { ApiResponse } from '../../core/models/api.model';
 
-export interface TaskItem{
-    id:string;
-    title: string;
-    description: string | null;
-    priority: 'LOW' |'MEDIUM' | 'HIGH';
-    status: 'TODO' | 'IN_PROGRESS' | 'COMPLETED';
-    createdBy:string;
-    assignedTo:string;
-
-    assignee:{
-        id:string,
-        name:string,
-    } | null;
-    dueDate: string | null;
-    createdAt: string;
-    updatedAt: string;
-}
-
-interface ApiResponse<T>{
-    success :boolean;
-    data: T;
-    message?: string;
-}
-
-export interface TaskFilters{
-    search?: string;
-    status?: string;
-    priority?:string;
-    sortBy?:string;
-    order?: 'asc' | 'desc';
-}
-
-
-export interface CreateTaskRequest{
-    title:string;
-    description?: string;
-    priority: 'LOW' |"MEDIUM" |"HIGH";
-    assignedTo: string;
-
-}
-
-
-export interface UpdateTaskRequest{
-    title?:string;
-    description?: string;
-    priority?: 'LOW' |"MEDIUM" |"HIGH";
-    status?: 'TODO' | 'IN_PROGRESS' | 'COMPLETED';
-    dueDate?: string;
-}
+import {
+  Task,
+  TaskItem,
+  TaskFilters,
+  CreateTaskRequest,
+  UpdateTaskRequest
+} from '../../core/models/task.model';
 
 @Injectable({
     providedIn:"root"

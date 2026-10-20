@@ -2,7 +2,10 @@
 import { Component, OnInit, inject ,ChangeDetectorRef} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TaskItem, TaskService } from '../../tasks/task.service';
+import { TaskService } from '../../tasks/task.service';
+
+import { Task } from '../../../core/models/task.model';
+
 
 @Component({
   selector: 'app-user-dashboard',
@@ -15,8 +18,8 @@ export class UserDashboard implements OnInit {
   private taskService = inject(TaskService);
   private cdr =inject(ChangeDetectorRef);
 
-  tasks: TaskItem[] = [];
-  loading = false;
+
+  tasks: Task[] = [];  loading = false;
   errorMessage = '';
 
   ngOnInit(): void {
@@ -59,7 +62,7 @@ export class UserDashboard implements OnInit {
     return this.tasks.filter(task => task.status === 'COMPLETED').length;
   }
 
-  get recentTasks(): TaskItem[] {
+  get recentTasks(): Task[] {
     return [...this.tasks]
       .sort((a, b) => {
         const dateA = new Date(a.updatedAt || a.createdAt).getTime();

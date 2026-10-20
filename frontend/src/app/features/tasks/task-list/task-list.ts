@@ -7,7 +7,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskItem, TaskService } from '../task.service';
+
+import { Task } from '../../../core/models/task.model';
+import { TaskService } from '../../tasks/task.service';
+
 import { TaskForm } from '../task-form/task-form'; 
 
 import { ToastService } from '../../../core/services/toast';
@@ -26,7 +29,7 @@ export class TaskList implements OnInit {
   private toastService = inject (ToastService);
 
 
-  tasks: TaskItem[] = [];
+  tasks: Task[] = [];
   loading = false;
   errorMessage = '';
 
@@ -38,7 +41,7 @@ export class TaskList implements OnInit {
 
 
   showCreateForm =false;
-  selectedTask: TaskItem | null = null;
+  selectedTask: Task | null = null;
 
   openCreateTask():void{
     this.showCreateForm=true;
@@ -51,7 +54,7 @@ export class TaskList implements OnInit {
 
   }
 
-  openEditTask(task: TaskItem): void {
+  openEditTask(task: Task): void {
     this.selectedTask = task;
     this.showCreateForm = true;
   }
@@ -91,7 +94,7 @@ export class TaskList implements OnInit {
     });
   }
 
-  get filteredTasks(): TaskItem[] {
+  get filteredTasks(): Task[] {
     const term = this.search.trim().toLowerCase();
 
     const result = this.tasks.filter((task) => {

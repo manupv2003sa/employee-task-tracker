@@ -1,10 +1,14 @@
 import { Component, inject, OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { DashboardService, Employee, Task } from '../dashboard';
+
+import { Task } from '../../../core/models/task.model';
+import { Employee } from '../../../core/models/employee.model';
 import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../auth/auth.service';
+import { EmployeeService } from '../../employees/employee.service';
+import { TaskService } from '../../tasks/task.service';
 
 @Component({
   imports: [RouterLink, DatePipe, CommonModule],
@@ -15,7 +19,9 @@ import { AuthService } from '../../auth/auth.service';
 export class AdminDashboard implements OnInit{
 
   private cdr = inject(ChangeDetectorRef);
-  private dashboardService = inject(DashboardService);
+  private employeeService = inject(EmployeeService);
+  private taskService = inject (TaskService);
+
   private authService =inject(AuthService);
 
 
@@ -50,8 +56,8 @@ export class AdminDashboard implements OnInit{
     this.errorMessage = '';
 
     forkJoin({
-      employees: this.dashboardService.getEmployees(),
-        tasks: this.dashboardService.getTasks()
+      employees: this.employeeService.getEmployees(),
+        tasks: this.taskService.getTasks()
       }).subscribe({
         next: ({ employees, tasks }) => {
           this.employees = employees.data.filter(

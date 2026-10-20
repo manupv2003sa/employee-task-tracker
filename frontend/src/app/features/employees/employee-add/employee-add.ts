@@ -1,8 +1,17 @@
 import { Component,ChangeDetectorRef ,inject,Output, EventEmitter} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { DashboardService } from '../../dashboard/dashboard';
+import { EmployeeService } from '../employee.service';
+import { UpdateEmployeeRequest } from '../../../core/models/employee.model';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../../core/services/toast';
+
+import {
+  CreateEmployeeRequest,
+  EmployeeRole
+} from '../../../core/models/employee.model';
+
+
 @Component({
   imports: [FormsModule],
   selector: 'app-employee-add',
@@ -16,18 +25,19 @@ export class EmployeeAdd {
   @Output() employeeAdded = new EventEmitter<void>();
 
   private toastService = inject(ToastService);
-  private dashboardService= inject(DashboardService);
+  private employeeService= inject(EmployeeService);
   private cdr= inject(ChangeDetectorRef);
-  employee = {
+  employee: CreateEmployeeRequest = {
     name: '',
     email: '',
     password: '',
     role: 'USER',
   };
-
   errorMessage= "";
   successMessage="";
   isSubmitting=false;
+
+  
 
   onSubmit(form:NgForm):void{
     if (form.invalid || this.isSubmitting){
@@ -45,7 +55,7 @@ export class EmployeeAdd {
       role:this.employee.role,
     };
 
-    this.dashboardService.createEmployee(employeeData).subscribe({
+    this.employeeService.createEmployee(employeeData).subscribe({
       next:()=>{
         this.employeeAdded.emit();
         this.toastService.success("Employee added successfully");

@@ -3,9 +3,17 @@ import { Component, OnInit, inject, ChangeDetectorRef , Output, EventEmitter,Inp
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DashboardService, Employee } from '../../dashboard/dashboard';
-import { TaskService, CreateTaskRequest, TaskItem ,UpdateTaskRequest} from '../task.service';
-import { TaskList } from '../task-list/task-list';
+
+import { EmployeeService } from '../../employees/employee.service';
+import { Employee } from '../../../core/models/employee.model';
+
+
+import { TaskService } from '../task.service';
+import {
+  Task,
+  CreateTaskRequest,
+  UpdateTaskRequest
+} from '../../../core/models/task.model';import { TaskList } from '../task-list/task-list';
 import { ToastService } from '../../../core/services/toast';
 
 
@@ -17,14 +25,14 @@ import { ToastService } from '../../../core/services/toast';
   styleUrl: './task-form.scss',
 })
 export class TaskForm implements OnInit,OnChanges {
-  private dashboardService = inject(DashboardService);
+  private employeeSevice = inject(EmployeeService);
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject (ToastService);
 
   
 
-  @Input() selectedTask: TaskItem | null=null;
+  @Input() selectedTask: Task | null=null;
   @Output() saved =new EventEmitter();
 
   @Output() cancel =new EventEmitter<void>();
@@ -74,7 +82,7 @@ export class TaskForm implements OnInit,OnChanges {
     this.isLoadingEmployees = true;
     this.errorMessage = '';
 
-    this.dashboardService
+    this.employeeSevice
       .getAssignableUsers()
       .subscribe({
         next: (response) => {

@@ -1,10 +1,17 @@
 
 import { Component, inject, OnInit, ChangeDetectorRef, ElementRef, HostListener} from '@angular/core';
-import { DashboardService, Employee } from '../../dashboard/dashboard';
+import { EmployeeService } from '../../employees/employee.service';
 import { FormsModule } from '@angular/forms';
 import { EmployeeAdd } from '../employee-add/employee-add';
 import { AuthService } from '../../auth/auth.service';
 import { ToastService } from '../../../core/services/toast';
+
+
+import {
+  Employee,
+  EmployeeRole,
+  UpdateEmployeeRequest,
+} from '../../../core/models/employee.model';
 
 @Component({
   selector: 'app-employee-list',
@@ -14,10 +21,14 @@ import { ToastService } from '../../../core/services/toast';
   styleUrl: './employee-list.scss'
 })
 
+
+
+
 export class EmployeeList implements OnInit {
 
+ 
   private toastService = inject (ToastService);
-  private dashboardService = inject(DashboardService);
+  private employeeService = inject(EmployeeService);
   private cdr = inject(ChangeDetectorRef);
   private elementRef=inject(ElementRef);
   
@@ -63,8 +74,7 @@ export class EmployeeList implements OnInit {
   selectedEmployee :Employee | null=null;
   editName='';
   editEmail='';
-  editRole='';
-
+  editRole: EmployeeRole | null = null;
   isSaving=false;
   editError='';
   editSuccess='';
@@ -141,7 +151,7 @@ export class EmployeeList implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.dashboardService
+    this.employeeService
       .getEmployees(this.currentPage, this.pageSize, this.searchTerm,  this.selectedRole,
             this.selectedStatus,  this.sortBy || 'createdAt',   this.sortOrder
 
@@ -204,47 +214,50 @@ export class EmployeeList implements OnInit {
       this.editIsActive !== this.selectedEmployee.isActive
     );
   }
-
-  saveEmployee():void{
-    if(!this.selectedEmployee || this.isSaving){
+  saveEmployee(): void {
+    if (!this.selectedEmployee || this.isSaving) {
       return;
     }
 
-    const employeeData={
-      name:this.editName.trim(),
-      email:this.editEmail.trim(),
-      role:this.editRole,
-      isActive: this.editIsActive
+    const name = this.editName.trim();
+    const email = this.editEmail.trim();
 
+    if (!name || !email || !this.editRole) {
+      this.editError = 'Please fill in all fields';
+      return;
+    }
+
+    const employeeData: UpdateEmployeeRequest = {
+      name,
+      email,
+      role: this.editRole,
+      isActive: this.editIsActive,
     };
 
-    if(!employeeData.name || !employeeData.email || !employeeData.role){
-      this.editError="Plese fill in all fields";
-      return ;
-    }
-    this.isSaving= true;
-    this.editError='';
-    this.editSuccess='';
+    this.isSaving = true;
+    this.editError = '';
+    this.editSuccess = '';
 
-    this.dashboardService
-      .updateEmployee(this.selectedEmployee.id,employeeData)
+    this.employeeService
+      .updateEmployee(this.selectedEmployee.id, employeeData)
       .subscribe({
-        next:()=>{
-          this.isSaving=false;
+        next: () => {
+          this.isSaving = false;
           this.toastService.success('Employee updated successfully');
           this.selectedEmployee = null;
           this.loadEmployees();
 
           this.cdr.detectChanges();
-
         },
-        error:(error)=>{
+        error: (error) => {
+          this.isSaving = false;
 
-          this.isSaving=false;
+          this.toastService.error(
+            error.error?.message || 'Failed to update employee'
+          );
 
-          this.toastService.error(error.error?.message || 'Failed to update employee');
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
@@ -278,7 +291,7 @@ export class EmployeeList implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.dashboardService.deactivateEmployee(employee.id).subscribe({
+    this.employeeService.deactivateEmployee(employee.id).subscribe({
       next: () => {
 
         // Remove the soft-deleted employee from the current screen

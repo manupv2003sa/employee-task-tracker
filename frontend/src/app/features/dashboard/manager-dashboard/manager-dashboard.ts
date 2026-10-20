@@ -1,11 +1,13 @@
 import { Component, inject, OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { DashboardService, Employee, Task } from '../dashboard';
+import { Task } from '../../../core/models/task.model';
+import { Employee } from '../../../core/models/employee.model';
 import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../auth/auth.service';
 import { TaskService } from '../../tasks/task.service';
+import { EmployeeService } from '../../employees/employee.service';
 
 @Component({
   imports: [RouterLink, DatePipe, CommonModule],
@@ -16,7 +18,7 @@ import { TaskService } from '../../tasks/task.service';
 export class ManagerDashboard  implements OnInit{
 
   private cdr = inject(ChangeDetectorRef);
-  private dashboardService = inject(DashboardService);
+  private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
   private taskService = inject(TaskService);
 
@@ -57,7 +59,7 @@ export class ManagerDashboard  implements OnInit{
 
     forkJoin({
         myTasks: this.taskService.getMyTasks(),
-        tasks: this.dashboardService.getTasks()
+        tasks: this.taskService.getTasks()
       }).subscribe({
         next: ({ myTasks, tasks }) => {
           
