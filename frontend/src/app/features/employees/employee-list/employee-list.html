@@ -1,12 +1,13 @@
 
 <section class="employee-page">
 
-  @if (showAddEmployee) {
-    <app-employee-add
-      (employeeAdded)="onEmployeeAdded()"
-    />
-  }
-
+@if (showEmployeeForm()) {
+  <app-employee-form
+    [employee]="selectedEmployee()"
+    (saved)="onEmployeeSaved()"
+    (cancelled)="closeEmployeeForm()"
+  />
+}
   <div class="page-header">
     <div>
       <h1>Employee Management</h1>
@@ -274,108 +275,7 @@
     }
 
 
-  <!-- Edit Employee Modal -->
-  @if (selectedEmployee) {
-    <div class="edit-form-overlay">
-      <section class="edit-form">
 
-        <div class="edit-form-header">
-          <div>
-            <h2>Edit Employee</h2>
-            <p>Update employee details and role.</p>
-          </div>
-
-          <button
-            type="button"
-            class="close-button"
-            (click)="selectedEmployee = null"
-          >
-            &times;
-          </button>
-        </div>
-
-        @if (editError) {
-          <p class="error-message">{{ editError }}</p>
-        }
-
-        @if (editSuccess) {
-          <p class="success-message">{{ editSuccess }}</p>
-        }
-
-        <form>
-          <div class="form-field">
-            <label for="editName">Full Name</label>
-            <input
-              id="editName"
-              type="text"
-              name="editName"
-              [(ngModel)]="editName"
-              (ngModelChange)="onNameChange($event)"
-              required
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="editEmail">Email</label>
-            <input
-              id="editEmail"
-              type="email"
-              name="editEmail"
-              [(ngModel)]="editEmail"
-              required
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="editRole">Role</label>
-            <select
-              id="editRole"
-              name="editRole"
-              [(ngModel)]="editRole"
-              required
-            >
-              <option value="ADMIN">Admin</option>
-              <option value="MANAGER">Manager</option>
-              <option value="USER">User</option>
-            </select>
-          </div>
-
-          <div class="form-field">
-            <label for="editStatus">Status</label>
-            <select
-              id="editStatus"
-              name="editIsActive"
-              [(ngModel)]="editIsActive"
-              required
-            >
-              <option [ngValue]="true">Active</option>
-              <option [ngValue]="false">Inactive</option>
-            </select>
-          </div>
-
-          <div class="form-actions">
-            <button
-              type="button"
-              class="cancel-button"
-              (click)="selectedEmployee = null"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="button"
-              class="save-button"
-              (click)="saveEmployee()"
-              [disabled]="!hasEditChanges() || isSaving"
-            >
-              {{ isSaving ? 'Saving...' : 'Save Changes' }}
-            </button>
-          </div>
-        </form>
-
-      </section>
-    </div>
-  }
 
   <!-- Employee List -->
   @if (isLoading) {

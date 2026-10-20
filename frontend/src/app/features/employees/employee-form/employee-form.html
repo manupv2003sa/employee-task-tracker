@@ -1,0 +1,144 @@
+
+<div class="edit-form-overlay" (click)="onCancel()">
+  <section
+    class="edit-form"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="isEditMode() ? 'Edit Employee' : 'Add Employee'"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="edit-form-header">
+      <div>
+        <h2>{{ isEditMode() ? 'Edit Employee' : 'Add Employee' }}</h2>
+        <p>
+          {{
+            isEditMode()
+              ? 'Update employee details and role.'
+              : 'Enter the details to create a new employee.'
+          }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        aria-label="Close"
+        [disabled]="isSubmitting()"
+        (click)="onCancel()"
+      >
+        &times;
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="employeeName">Full Name</label>
+        <input
+          id="employeeName"
+          type="text"
+          formControlName="name"
+          placeholder="Enter full name"
+        />
+
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <small class="error-message">
+            @if (form.controls.name.hasError('required')) {
+              Name is required.
+            } @else if (form.controls.name.hasError('minlength')) {
+              Name must contain at least 2 characters.
+            } @else {
+              Enter a valid name.
+            }
+          </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="employeeEmail">Email</label>
+        <input
+          id="employeeEmail"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email address"
+        />
+
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <small class="error-message">
+            @if (form.controls.email.hasError('required')) {
+              Email is required.
+            } @else {
+              Enter a valid email address.
+            }
+          </small>
+        }
+      </div>
+
+      @if (!isEditMode()) {
+        <div class="form-field">
+          <label for="employeePassword">Password</label>
+          <input
+            id="employeePassword"
+            type="password"
+            formControlName="password"
+            placeholder="Enter password (minimum 8 characters)"
+          />
+
+          @if (
+            form.controls.password.touched &&
+            form.controls.password.invalid
+          ) {
+            <small class="error-message">
+              @if (form.controls.password.hasError('required')) {
+                Password is required.
+              } @else {
+                Password must contain at least 8 characters.
+              }
+            </small>
+          }
+        </div>
+      }
+
+      <div class="form-field">
+        <label for="employeeRole">Role</label>
+        <select id="employeeRole" formControlName="role">
+          <option value="USER">User</option>
+          <option value="MANAGER">Manager</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+
+      @if (isEditMode()) {
+        <div class="form-field">
+          <label for="employeeStatus">Status</label>
+          <select id="employeeStatus" formControlName="isActive">
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
+      }
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="isSubmitting()"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="form.invalid || isSubmitting()"
+        >
+          @if (isSubmitting()) {
+            {{ isEditMode() ? 'Saving...' : 'Adding Employee...' }}
+          } @else {
+            {{ isEditMode() ? 'Save Changes' : 'Add Employee' }}
+          }
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
