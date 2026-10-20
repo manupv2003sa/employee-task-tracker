@@ -10,6 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { TaskItem, TaskService } from '../../../core/services/task';
 import { TaskForm } from '../task-form/task-form'; 
 
+import { ToastService } from '../../../core/services/toast';
+
+
 @Component({
   imports: [FormsModule, CommonModule,TaskForm],
   standalone: true,
@@ -20,6 +23,8 @@ import { TaskForm } from '../task-form/task-form';
 export class TaskList implements OnInit {
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
+  private toastService = inject (ToastService);
+
 
   tasks: TaskItem[] = [];
   loading = false;
@@ -36,7 +41,6 @@ export class TaskList implements OnInit {
   selectedTask: TaskItem | null = null;
 
   openCreateTask():void{
-    console.log("Pressed");
     this.showCreateForm=true;
     this.selectedTask=null;
   }
@@ -79,10 +83,7 @@ export class TaskList implements OnInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Failed to load tasks:', error);
-
-        this.errorMessage =
-          error.error?.message || 'Failed to load tasks.';
+        this.toastService.success(error.error?.message || 'Failed to load tasks.');
 
         this.loading = false;
         this.cdr.detectChanges();

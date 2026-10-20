@@ -75,12 +75,10 @@ export class TaskForm implements OnInit,OnChanges {
     this.errorMessage = '';
 
     this.dashboardService
-      .getEmployees(1, 100, '', '', 'active', 'name', 'asc')
+      .getAssignableUsers()
       .subscribe({
         next: (response) => {
-          this.employees = response.data.filter(
-            (employee) => employee.isActive
-          );
+          this.employees = response.data
 
           this.isLoadingEmployees = false;
           this.cdr.detectChanges();
@@ -141,11 +139,9 @@ export class TaskForm implements OnInit,OnChanges {
       error:(error:unknown)=>{
         console.error('Failed to save task:',error);
 
-          this.toastService.error(
-            error instanceof HttpErrorResponse
+          this.toastService.error(error instanceof HttpErrorResponse
             ? error.error?.message || 'Unable to create task.'
-            : 'Unable to create task.'
-          );
+            : 'Unable to create task.');
            this.isSubmitting = false;
            this.cdr.detectChanges();
       },

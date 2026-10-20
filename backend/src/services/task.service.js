@@ -198,11 +198,32 @@ async function updateMyTasksStatus(taskId, userId, status) {
     return task;
 }
 
+
+
+async function getAssignableUsers(userId){
+    const user = await User.findByPk(userId)
+     if(!user){
+        throw new Error("User not found");
+    }
+    const users= await User.findAll({
+        attributes :["id", "name", "email"],
+        where:{
+            role:["USER", "MANAGER"],
+            isActive:true,
+        },
+        order:[["name","ASC"]],
+    });
+    return users;
+}
+
+
+
 module.exports={
     createTask,
     assignTask,
     editTask,
     searchTasks,
     getMyTasks,
-    updateMyTasksStatus
+    updateMyTasksStatus,
+    getAssignableUsers
 }

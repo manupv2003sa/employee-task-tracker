@@ -95,6 +95,13 @@ export class DashboardService {
         );
     }
 
+    getAssignableUsers(): Observable<ApiResponse<Employee[]>> {
+        return this.http.get<ApiResponse<Employee[]>>(
+            `${this.apiUrl}/tasks/assignable-users`
+        );
+    }
+
+
     updateEmployee(
         id:string,
         employee:{

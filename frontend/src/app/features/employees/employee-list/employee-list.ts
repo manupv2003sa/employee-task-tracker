@@ -250,7 +250,6 @@ export class EmployeeList implements OnInit {
 
   onNameChange(value: string): void {
     this.editName = value;
-    console.log('Name changed:', value);
   }
 
   goToPage(page: number): void {
