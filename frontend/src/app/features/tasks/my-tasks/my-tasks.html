@@ -19,7 +19,7 @@
     {{ successMessage }}
   </div>
 
-  <!-- Status filters -->
+  <!-- Status filters and Export button -->
   <div class="toolbar">
     <div class="status-tabs">
       <button
@@ -50,6 +50,13 @@
         Completed · {{ completedCount }}
       </button>
     </div>
+
+    <button
+      type="button"
+      class="export-btn"
+      (click)="exportTasksToExcel()">
+      ↓ Export to Excel
+    </button>
   </div>
 
   <!-- Loading -->

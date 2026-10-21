@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {  TaskService } from '../task.service';
 import { Task } from '../../../core/models/task.model';
+import {ExcelExportService} from '../../../core/services/excel-export';
 
 @Component({
   selector: 'app-my-tasks',
@@ -14,6 +15,7 @@ import { Task } from '../../../core/models/task.model';
 export class MyTasks implements OnInit {
   private taskService = inject(TaskService);
   private cdr =inject(ChangeDetectorRef);
+  private excelExportService = inject(ExcelExportService);
 
   tasks: Task[] = [];
 
@@ -121,5 +123,19 @@ export class MyTasks implements OnInit {
 
         },
       });
+  }
+
+  exportTasksToExcel(): void {
+    if (this.filteredTasks.length === 0) {
+      this.errorMessage = 'No tasks available to export.';
+      return;
+    }
+
+    this.errorMessage = '';
+    this.excelExportService.exportTasks(
+      this.filteredTasks,
+      'my-tasks',
+      false
+    );
   }
 }

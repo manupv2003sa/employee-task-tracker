@@ -1,4 +1,3 @@
-
 import {
   Component,
   OnInit,
@@ -14,6 +13,7 @@ import { TaskService } from '../../tasks/task.service';
 import { TaskForm } from '../task-form/task-form'; 
 
 import { ToastService } from '../../../core/services/toast';
+import { ExcelExportService } from '../../../core/services/excel-export';
 
 
 @Component({
@@ -27,6 +27,7 @@ export class TaskList implements OnInit {
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject (ToastService);
+  private excelExportService = inject(ExcelExportService);
 
 
   tasks: Task[] = [];
@@ -86,7 +87,7 @@ export class TaskList implements OnInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        this.toastService.success(error.error?.message || 'Failed to load tasks.');
+        this.toastService.error(error.error?.message || 'Failed to load tasks.');
 
         this.loading = false;
         this.cdr.detectChanges();
@@ -205,7 +206,18 @@ export class TaskList implements OnInit {
     return days === 1 ? 'Tomorrow' : `In ${days} days`;
   }
 
- 
+  exportTasksToExcel(): void {
+    if (this.filteredTasks.length === 0) {
+      this.toastService.error('No tasks available to export.');
+      return;
+    }
+
+    this.excelExportService.exportTasks(
+      this.filteredTasks,
+      'tasks',
+    );
+  }
+
   clearFilters(): void {
     this.search = '';
     this.status = '';
