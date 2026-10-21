@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../profile.service';
 import { finalize } from 'rxjs';
 import { ToastService } from '../../../core/services/toast';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({
@@ -17,6 +19,8 @@ import { ToastService } from '../../../core/services/toast';
 export class ChangePassword {
   private profileService = inject(ProfileService);
   private toastService = inject (ToastService);
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -73,11 +77,8 @@ export class ChangePassword {
     .subscribe({
       next: (response) => {
          this.toastService.success(response.message || 'Password changed successfully.');
-
-        this.currentPassword = '';
-        this.newPassword = '';
-        this.confirmPassword = '';
-        this.cdr.detectChanges();
+          this.authService.logout();
+          void this.router.navigate(['/login']);
 
       },
       error: (error) => {
