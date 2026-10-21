@@ -25,6 +25,7 @@ async function authenticateUser(email,password) {
     if(!isPasswordValid){
         return null;
     }
+    console.log('Profile picture from Sequelize:', user.profilePicture);
 
     return user;
 }

@@ -10,6 +10,7 @@ async function getProfile(userId){
             "email",
             "role",
             "isActive",
+            "profilePicture",
             "createdAt",
             "updatedAt",
         ]

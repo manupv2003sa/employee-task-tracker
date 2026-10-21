@@ -68,7 +68,7 @@ form {
 
     &:focus {
       outline: none;
-      border-color: #4f46e5;
+      border-color: #285bea;
       box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
     }
   }
@@ -116,7 +116,7 @@ button[type='submit'] {
   padding: 13px 18px;
   border: none;
   border-radius: 8px;
-  background: #4f46e5;
+  background: #285bea;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
@@ -127,7 +127,7 @@ button[type='submit'] {
   
 
   &:hover:not(:disabled) {
-    background: #4338ca;
+    background: #285bea;
   }
 
   &:active:not(:disabled) {
@@ -167,7 +167,7 @@ button[type='submit'] {
     padding: 13px 18px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    background: #4f46e5;
+    background: #285bea;
     color: #ffffff;
     font-size: 15px;
     font-weight: 600;
@@ -175,7 +175,7 @@ button[type='submit'] {
     transition: background 0.2s, transform 0.2s;
 
     &:hover:not(:disabled) {
-      background: #4f46e5;
+      background: #285bea;
       border-color: #9ca3af;
     }
 

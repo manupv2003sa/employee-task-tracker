@@ -40,6 +40,12 @@ User.init(
       defaultValue: true,
       field: "is_active",
     },
+    
+    profilePicture: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'profile_picture',
+    },
   },
   {
     sequelize,

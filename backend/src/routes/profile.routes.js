@@ -1,5 +1,8 @@
 const express = require("express");
 const router= express.Router();
+const upload = require("../middlewares/upload");
+const { uploadProfilePicture } = require("../controllers/profile.controller");
+
 
 const {authenticateToken}= require("../middlewares/auth.middleware");
 
@@ -21,6 +24,13 @@ router.put(
     "/change-password",
     authenticateToken,
     changePasswordController
+);
+
+router.post(
+    "/picture",
+    authenticateToken,
+    upload.single("profilePicture"),
+    uploadProfilePicture
 );
 
 

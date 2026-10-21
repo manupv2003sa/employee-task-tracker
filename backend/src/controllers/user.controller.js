@@ -162,7 +162,7 @@ async function getUsers(req,res) {
                 message:"Page must be a positive integer"
             });
         }if (!Number.isInteger(limit) || limit<1 || limit>100){
-            return res.status({
+            return res.status(400).json({
                 success: false,
                 message:" Limit must be between 1 and 100"
             });
@@ -179,7 +179,7 @@ async function getUsers(req,res) {
 
         const totalPages= Math.ceil(result.total/Number(limit))
         return res.status(200).json({
-            sucess:true,
+            success:true,
             data:result.users,
             pagination:{
                 page:Number(page),

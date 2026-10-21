@@ -5,6 +5,7 @@ async function login(req, res) {
   try {
     const { email, password } = req.body || {};
 
+
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -40,14 +41,15 @@ async function login(req, res) {
           name: user.name,
           email: user.email,
           role: user.role,
+          profilePicture: user.profilePicture
+
         },
       },
     });
-  } catch (error) {
-
+  }catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 }
