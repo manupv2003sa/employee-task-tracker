@@ -1,5 +1,5 @@
 const express=require("express");
-const {addTask, updateTaskAssignee, updateTask, getTasks, getMyTasksController, updateMyTaskStatusController, getAssignableUsersController}= require("../controllers/task.controller.js");
+const {addTask, updateTaskAssignee, editTaskController, getTasks, getMyTasksController, updateMyTaskStatusController, getAssignableUsersController}= require("../controllers/task.controller.js");
 const {authenticateToken}=require("../middlewares/auth.middleware.js");
 const {authorizeRoles} =require("../middlewares/role.middleware.js");
 
@@ -13,26 +13,12 @@ router.post(
 );
 
 
-router.post(
-    "/:id/assign",
-    authenticateToken,
-    authorizeRoles("ADMIN","MANAGER"),
-    updateTaskAssignee
-);
-
-
-router.patch(
-    "/:id/assign",
-    authenticateToken,
-    authorizeRoles("ADMIN", "MANAGER"),
-    updateTaskAssignee
-);
 
 router.put(
     "/:id",
     authenticateToken,
     authorizeRoles("ADMIN", "MANAGER"),
-    updateTask
+    editTaskController
 );
 
 router.get(

@@ -49,28 +49,21 @@ async function addTask(req,res) {
 }
 
 
-async function updateTaskAssignee(req, res) {
+
+async function editTaskController(req, res) {
     try {
-        const { assignedTo } = req.body;
         const { id } = req.params;
-    
-         if (!assignedTo) {
-            return res.status(400).json({
-                success: false,
-                message: "Assigned employee is required"
-            });
-        }
-        const task= await assignTask(id,assignedTo);
+        const task = await editTask(id, req.body);
 
         return res.status(200).json({
-            success:true,
-            data:task
+            success: true,
+            data: task
         });
-    }catch(error){
-        if (error.message==="Task not found"){
+    } catch (error) {
+        if (error.message === "Task not found") {
             return res.status(404).json({
-                success:false,
-                message:error.message
+                success: false,
+                message: error.message
             });
         }
         if (error.message === "Assigned employee not found or inactive") {
@@ -79,40 +72,13 @@ async function updateTaskAssignee(req, res) {
                 message: error.message
             });
         }
-
         return res.status(500).json({
             success: false,
             message: error.message
         });
-
     }
-
 }
 
-async function updateTask(req,res) {
-    try{
-        const {id}= req.params;
-
-        const task=await editTask(id,req.body);
-        return res.status(200).json({
-            success:true,
-            data :task
-        });
-    }catch(error){
-        if (error.message==="Task not found"){
-            return res.status(404).json({
-                success:false,
-                message:error.message
-            });
-        }
-        return res.status(500).json({
-        success: false,
-        message: error.message
-        });
-
-    }
-    
-}
 
 async function getTasks(req,res) {
     try{
@@ -228,8 +194,7 @@ async function getAssignableUsersController(req,res){
 }
 module.exports={
     addTask,
-    updateTaskAssignee,
-    updateTask,
+    editTaskController,
     getTasks,
     getMyTasksController,
     updateMyTaskStatusController,

@@ -36,39 +36,14 @@ async function createTask(data,created_by) {
     
 }
 
-async function assignTask(taskId,assignedTo) {
-    const task= await Task.findByPk(taskId);
+async function editTask(taskId, data) {
+    const task = await Task.findByPk(taskId);
 
-    if (!task){
+    if (!task) {
         throw new Error("Task not found");
     }
 
-    const assignedUser = await User.findOne({
-        where: {
-            id:assignedTo,
-            isActive:true
-        }
-    });
-
-    if(!assignedUser){
-        throw new Error("Assigned employee not found or inactive");
-    }
-
-    task.assignedTo=assignedTo;
-
-    await task.save();
-    return task;
-    
-}
-
-async function editTask(taskId,data) {
-    const task= await Task.findByPk(taskId);
-
-    if(!task){
-        throw new Error("Task not found");
-    }
-    const {title,description,priority,status}=data;
-     const allowedFields = [
+    const allowedFields = [
         "title",
         "description",
         "priority",
@@ -76,15 +51,35 @@ async function editTask(taskId,data) {
         "dueDate",
     ];
 
+    // Update normal task fields
     for (const field of allowedFields) {
         if (data[field] !== undefined) {
             task[field] = data[field];
         }
     }
-    
+
+    // Update assignee when provided
+    if (data.assignedTo !== undefined) {
+        const assignedUser = await User.findOne({
+            where: {
+                id: data.assignedTo,
+                isActive: true,
+            },
+        });
+
+        if (!assignedUser) {
+            throw new Error(
+                "Assigned employee not found or inactive"
+            );
+        }
+
+        task.assignedTo = data.assignedTo;
+    }
+
     await task.save();
     return task;
 }
+
 
 async function searchTasks(search, status,priority, sortBy,order) {
     const where={};
@@ -220,7 +215,6 @@ async function getAssignableUsers(userId){
 
 module.exports={
     createTask,
-    assignTask,
     editTask,
     searchTasks,
     getMyTasks,
