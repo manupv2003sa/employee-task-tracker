@@ -20,6 +20,12 @@ export class ProfileComponent implements OnInit{
 
 
   profile : Profile | null = null;
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+  isUploadingPhoto = false;
+
+
+
   editedName= '';
 
   isEditing =false;
@@ -110,6 +116,74 @@ export class ProfileComponent implements OnInit{
 
       }
     });
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      this.toastService.error('Choose a JPEG, PNG, or WebP image.');
+      input.value = '';
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      this.toastService.error('Photo must be smaller than 2 MB.');
+      input.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.previewUrl = URL.createObjectURL(file);
+  }
+
+  uploadPhoto(): void {
+    if (!this.selectedFile || this.isUploadingPhoto) return;
+
+    this.isUploadingPhoto = true;
+
+    this.profileService.uploadProfilePicture(this.selectedFile).subscribe({
+      next: (response) => {
+        if (this.profile) {
+          this.profile = {
+            ...this.profile,
+            profilePicture: response.data.profilePicture
+          };
+        }
+
+        this.selectedFile = null;
+
+        if (this.previewUrl) {
+          URL.revokeObjectURL(this.previewUrl);
+          this.previewUrl = null;
+        }
+
+        this.isUploadingPhoto = false;
+        this.cdr.detectChanges();
+
+        this.toastService.success(
+          response.message || 'Profile picture updated successfully.'
+        );
+      },
+
+      error: (error) => {
+        this.isUploadingPhoto = false;
+
+        this.toastService.error(
+          error.error?.message || 'Failed to upload profile picture.'
+        );
+        
+      }
+    });
+  }
+
+  getProfilePictureUrl(): string {
+    const path = this.profile?.profilePicture;
+
+    return path ? `http://localhost:3000${path}` : '';
   }
 }
 

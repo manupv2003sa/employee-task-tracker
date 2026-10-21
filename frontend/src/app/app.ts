@@ -12,6 +12,5 @@ import { ToastService } from './core/services/toast';
 export class App {
   protected readonly title = signal('employee-task-tracker-frontend');
 
- 
 }
 

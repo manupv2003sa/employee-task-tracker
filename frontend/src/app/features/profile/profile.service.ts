@@ -15,6 +15,7 @@ export interface Profile{
     email:string;
     role:string;
     isActive:boolean;
+    profilePicture: string | null;
     createdAt: string;
     updatedAt:string;
 }
@@ -54,6 +55,21 @@ export class ProfileService{
         return this.http.put<ApiResponse<unknown>>(
             `${this.apiUrl}/change-password`,
             data
+        );
+    }
+
+
+    uploadProfilePicture(file: File) {
+        const formData = new FormData();
+
+        formData.append('profilePicture', file);
+
+        return this.http.post<{
+            message: string;
+            data: {profilePicture: string};
+        }>(
+            'http://localhost:3000/api/profile/picture',
+            formData
         );
     }
 

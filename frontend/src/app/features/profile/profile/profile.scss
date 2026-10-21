@@ -1,111 +1,178 @@
-
-:host {
-  display: block;
-  width: 100%;
-  color: #172b4d;
-}
+// ---------------------------------------------------------------
+// Theme tokens: replace these values with your app's predefined
+// palette (or point them at your global variables).
+// ---------------------------------------------------------------
+$primary: #2563eb;
+$primary-dark: #1d4ed8;
+$text-dark: #111827;
+$text-muted: #6b7280;
+$border: #e5e7eb;
+$surface: #ffffff;
+$page-bg: #f9fafb;
+$success-bg: #dcfce7;
+$success-text: #166534;
+$error-bg: #fee2e2;
+$error-text: #991b1b;
+$radius: 10px;
+$avatar-size: 96px;
 
 .profile-page {
-  width: 100%;
-  max-width: 1050px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 56px 36px 40px;
-  box-sizing: border-box;
+  padding: 24px 16px;
+  color: $text-dark;
+}
+
+// ---------- Heading ----------
+.profile-heading {
+  margin-bottom: 20px;
 
   h2 {
-    margin: 0 0 6px;
-    color: #172b4d;
-    font-size: 26px;
+    margin: 0 0 4px;
+    font-size: 1.6rem;
     font-weight: 700;
   }
 
   .subtitle {
-    margin: 0 0 20px;
-    color: #60738f;
-    font-size: 14px;
+    margin: 0;
+    color: $text-muted;
+    font-size: 0.95rem;
   }
 }
 
+// ---------- Messages ----------
+.loading-message,
+.message-error,
+.message-success {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.loading-message {
+  background: $page-bg;
+  color: $text-muted;
+  border: 1px solid $border;
+}
+
+.message-error {
+  background: $error-bg;
+  color: $error-text;
+}
+
+.message-success {
+  background: $success-bg;
+  color: $success-text;
+}
+
+// ---------- Card ----------
 .profile-card {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 30px 36px;
-  box-sizing: border-box;
-  background: #fff;
-  border: 1px solid #dce5f0;
-  border-radius: 13px;
-  box-shadow: 0 4px 14px rgba(20, 43, 77, 0.05);
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.profile-divider {
+  height: 1px;
+  background: $border;
+  margin: 24px 0;
+}
+
+// ---------- Fields ----------
+// Left column: Full Name, Email. Right column: Role, Account Status.
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column; // fills the left column first, then the right
+  gap: 18px 32px;
 }
 
 .profile-field {
-  display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  align-items: center;
-  gap: 20px;
-  min-height: 59px;
-  padding: 14px 0;
-  border-bottom: 1px solid #edf1f7;
-  box-sizing: border-box;
-
   label {
-    color: #344563;
-    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $text-muted;
   }
 
   p {
     margin: 0;
-    color: #172b4d;
-    font-size: 15px;
-    overflow-wrap: anywhere;
+    font-size: 1rem;
   }
 
-  input {
+  input[type='text'] {
     width: 100%;
-    min-width: 0;
     padding: 10px 12px;
-    border: 1px solid #cbd7e8;
-    border-radius: 6px;
-    outline: none;
+    font-size: 1rem;
+    border: 1px solid $border;
+    border-radius: 8px;
     box-sizing: border-box;
-    color: #172b4d;
-    background: #fff;
-    font-family: inherit;
-    font-size: 14px;
+    transition: border-color 0.15s, box-shadow 0.15s;
 
     &:focus {
-      border-color: #285bea;
-      box-shadow: 0 0 0 3px rgba(40, 91, 234, 0.1);
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.15);
     }
   }
 }
 
-.actions {
+// ---------- Profile picture ----------
+.picture-upload-row {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 24px;
-  padding-top: 4px;
 }
 
-.actions button {
-  min-height: 40px;
-  padding: 0 18px;
-  border: 1px solid #285bea;
-  border-radius: 7px;
-  background: #285bea;
-  color: #fff;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
+.profile-avatar,
+.default-avatar {
+  width: $avatar-size;
+  height: $avatar-size;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
 
-  &:hover:not(:disabled) {
-    background: #1e48c5;
-  }
+.profile-avatar {
+  object-fit: cover;
+  border: 2px solid $border;
+}
+
+.default-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $primary;
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.picture-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.upload-button,
+.confirm-upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
 
   &:disabled {
     opacity: 0.6;
@@ -113,54 +180,128 @@
   }
 }
 
-/* Style Cancel differently from Save Changes */
-.actions button + button {
-  border-color: #d5deeb;
-  background: #fff;
-  color: #344563;
+.upload-button {
+  background: $surface;
+  color: $text-dark;
+  border: 1px solid $border;
 
   &:hover:not(:disabled) {
-    background: #f3f6fb;
+    background: $page-bg;
+  }
+
+  .upload-icon {
+    font-weight: 700;
   }
 }
 
-.message-error,
-.message-success {
-  margin-bottom: 16px;
-  padding: 12px 15px;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  font-size: 13px;
-}
+.confirm-upload-button {
+  background: $primary;
+  color: #fff;
+  border: none;
 
-.message-error {
-  border-color: #fecdca;
-  background: #fef3f2;
-  color: #b42318;
-}
-
-.message-success {
-  border-color: #abefc6;
-  background: #ecfdf3;
-  color: #067647;
-}
-
-.profile-page > div[ng-reflect-ng-if] {
-  color: #60738f;
-}
-
-@media (max-width: 700px) {
-  .profile-page {
-    padding: 30px 16px;
+  &:hover:not(:disabled) {
+    background: $primary-dark;
   }
+}
 
-  .profile-card {
-    padding: 22px 18px;
+.upload-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: $text-muted;
+}
+
+// ---------- Badges ----------
+.role-badge,
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.role-badge {
+  background: rgba($primary, 0.1);
+  color: $primary-dark;
+  text-transform: capitalize;
+}
+
+.status-active {
+  background: $success-bg;
+  color: $success-text;
+}
+
+.status-inactive {
+  background: $error-bg;
+  color: $error-text;
+}
+
+// ---------- Actions ----------
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary-button,
+.cancel-button {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
+}
 
-  .profile-field {
+.primary-button {
+  background: $primary;
+  color: #fff;
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: $primary-dark;
+  }
+}
+
+.cancel-button {
+  background: $surface;
+  color: $text-dark;
+  border: 1px solid $border;
+
+  &:hover:not(:disabled) {
+    background: $page-bg;
+  }
+}
+
+// ---------- Mobile ----------
+@media (max-width: 600px) {
+  .profile-details {
     grid-template-columns: 1fr;
-    gap: 9px;
-    padding: 16px 0;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 16px;
+  }
+
+  .picture-upload-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
   }
 }

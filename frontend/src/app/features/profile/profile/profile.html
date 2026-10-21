@@ -1,50 +1,126 @@
-
 <div class="profile-page">
-  <h2>My Profile</h2>
-  <p class="subtitle">View and manage your account information.</p>
-    <div *ngIf="isLoading">Loading profile</div>
+  <div class="profile-heading">
+    <h2>My Profile</h2>
+    <p class="subtitle">View and manage your account information.</p>
+  </div>
 
-    <div *ngIf="errorMessage" class="message-error">
-        {{errorMessage}}
+  <div *ngIf="isLoading" class="loading-message">
+    Loading profile...
+  </div>
+
+  <div *ngIf="errorMessage" class="message-error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="message-success">
+    {{ successMessage }}
+  </div>
+
+  <section *ngIf="profile && !isLoading" class="profile-card">
+
+    <!-- Profile picture and upload -->
+  <div class="profile-field profile-picture-field">
+  <label>Profile Picture</label>
+
+  <div class="picture-upload-row">
+    <img
+      *ngIf="previewUrl || profile.profilePicture"
+      [src]="previewUrl || getProfilePictureUrl()"
+      alt="Profile picture"
+      class="profile-avatar"
+    />
+
+    <div
+      *ngIf="!previewUrl && !profile.profilePicture"
+      class="default-avatar"
+    >
+      {{ profile.name.charAt(0).toUpperCase() }}
     </div>
 
-    <div *ngIf="successMessage" class="message-success">
-        {{successMessage}}
+    <div class="picture-upload">
+      <input
+        #photoInput
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        (change)="onPhotoSelected($event)"
+        hidden
+      />
+
+      <button
+        type="button"
+        class="upload-button"
+        (click)="photoInput.click()"
+        [disabled]="isUploadingPhoto"
+      >
+        <span class="upload-icon">↑</span>
+        Choose Photo
+      </button>
+
+      <p class="upload-hint">JPG or PNG, up to 2 MB</p>
+
+      <button
+        *ngIf="selectedFile"
+        type="button"
+        class="confirm-upload-button"
+        (click)="uploadPhoto()"
+        [disabled]="isUploadingPhoto"
+      >
+        {{ isUploadingPhoto ? 'Uploading...' : 'Upload Photo' }}
+      </button>
+    </div>
+  </div>
+</div>
+    <div class="profile-divider"></div>
+
+    <!-- Profile details -->
+    <div class="profile-details">
+
+      <div class="profile-field">
+        <label>Full Name</label>
+
+        <input
+          *ngIf="isEditing"
+          type="text"
+          [(ngModel)]="editedName"
+          maxlength="100"
+          placeholder="Enter your name"
+        />
+
+        <p *ngIf="!isEditing">{{ profile.name }}</p>
+      </div>
+
+      <div class="profile-field">
+        <label>Email Address</label>
+        <p>{{ profile.email }}</p>
+      </div>
+
+      <div class="profile-field">
+        <label>Role</label>
+        <p>
+          <span class="role-badge">{{ profile.role }}</span>
+        </p>
+      </div>
+
+      <div class="profile-field">
+        <label>Account Status</label>
+        <p>
+          <span
+            class="status-badge"
+            [ngClass]="profile.isActive ? 'status-active' : 'status-inactive'"
+          >
+            {{ profile.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+      </div>
+
     </div>
 
-    <section *ngIf ="profile && !isLoading" class="profile-card">
-        <div class="profile-field">
-            <label>Full Name</label>
-
-            <input
-                *ngIf="isEditing"
-                type="text"
-                [(ngModel)]="editedName"
-                maxLength="100"
-                placeholder="Enter your name"
-            />
-
-            <p *ngIf ="!isEditing">{{profile.name}}</p>
-        </div>
-         <div class="profile-field">
-      <label>Email Address</label>
-      <p>{{ profile.email }}</p>
-    </div>
-
-    <div class="profile-field">
-      <label>Role</label>
-      <p>{{ profile.role }}</p>
-    </div>
-
-    <div class="profile-field">
-      <label>Account Status</label>
-      <p>{{ profile.isActive ? 'Active' : 'Inactive' }}</p>
-    </div>
-
+    <!-- Actions -->
     <div class="actions">
       <button
         *ngIf="!isEditing"
         type="button"
+        class="primary-button"
         (click)="startEditing()"
       >
         Edit Profile
@@ -53,6 +129,7 @@
       <ng-container *ngIf="isEditing">
         <button
           type="button"
+          class="primary-button"
           (click)="saveProfile()"
           [disabled]="isSaving"
         >
@@ -61,6 +138,7 @@
 
         <button
           type="button"
+          class="cancel-button"
           (click)="cancelEditing()"
           [disabled]="isSaving"
         >
@@ -68,5 +146,6 @@
         </button>
       </ng-container>
     </div>
+
   </section>
 </div>

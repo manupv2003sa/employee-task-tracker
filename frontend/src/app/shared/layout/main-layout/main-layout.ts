@@ -94,6 +94,24 @@ export class MainLayout implements OnInit {
     );
   }
 
+  getProfilePictureUrl(): string {
+    const profilePicture = this.currentUser?.profilePicture;
+
+    if (!profilePicture) {
+      return '/default-avatar.png';
+    }
+
+    return `http://localhost:3000${profilePicture}`;
+  }
+
+  onAvatarError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+
+    if (!img.src.endsWith('/default-avatar.png')) {
+      img.src = '/default-avatar.png';
+    }
+  }
+
   logout(): void {
     this.authService.logout();
     this.currentUser = null;

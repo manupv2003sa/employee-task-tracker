@@ -66,7 +66,6 @@ export class ManagerDashboard  implements OnInit{
           this.tasks = tasks.data ?? [];
 
           this.myTasks = myTasks.data?.length ?? 0;
-          console.log(myTasks);
 
           this.totalTasks = this.tasks.length;
 
@@ -82,7 +81,6 @@ export class ManagerDashboard  implements OnInit{
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Failed to load dashboard:', error);
           this.errorMessage = 'Unable to load dashboard data.';
           this.isLoading = false;
           this.cdr.detectChanges();

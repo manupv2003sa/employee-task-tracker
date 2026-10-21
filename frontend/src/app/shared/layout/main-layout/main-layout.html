@@ -33,9 +33,13 @@
             </div>
 
             <div class="user-info">
-                <div class="avatar">
-                    {{currentUser?.name?.charAt(0)?.toUpperCase() || 'U'}}
-                </div>
+              <div class="avatar">
+                <img
+                    [src]="getProfilePictureUrl()"
+                    [alt]="currentUser?.name || 'User'"
+                    (error)="onAvatarError($event)"
+                />
+              </div>
 
                 <div class="user-details">
                     <strong>{{currentUser?.name || 'User'}}</strong>

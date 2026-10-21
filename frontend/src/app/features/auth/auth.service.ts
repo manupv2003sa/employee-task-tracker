@@ -13,6 +13,8 @@ export interface LoginResponse{
             name:string;
             email:string;
             role : 'ADMIN' | 'MANAGER' | 'USER';
+            profilePicture: string | null;
+
         }
     };
 }
@@ -68,7 +70,8 @@ export class AuthService{
         id: currentUser.id,
         name: name,
         email: currentUser.email,
-        role: currentUser.role
+        role: currentUser.role,
+        profilePicture: currentUser.profilePicture
     };
 
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
