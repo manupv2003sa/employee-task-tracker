@@ -139,6 +139,14 @@ async function updateMyTaskStatusController(req,res) {
             status
         );
 
+
+        const io = req.app.get("io");
+
+        if (io) {
+            io.to("role:ADMIN").emit("task:status-updated", task);
+            io.to("role:MANAGER").emit("task:status-updated", task);
+        }
+
         return res.status(200).json({
             success: true,
             message: "Task status updated successfully",

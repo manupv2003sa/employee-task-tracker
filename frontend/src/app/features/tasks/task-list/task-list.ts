@@ -14,8 +14,7 @@ import { TaskForm } from '../task-form/task-form';
 
 import { ToastService } from '../../../core/services/toast';
 import { ExcelExportService } from '../../../core/services/excel-export';
-
-
+import { SocketService } from '../../../core/services/socket.service';
 @Component({
   imports: [FormsModule, CommonModule,TaskForm],
   standalone: true,
@@ -28,6 +27,7 @@ export class TaskList implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject (ToastService);
   private excelExportService = inject(ExcelExportService);
+  private socketService = inject(SocketService);
 
 
   tasks: Task[] = [];
@@ -73,8 +73,17 @@ export class TaskList implements OnInit {
   };
 
   ngOnInit(): void {
-    this.loadTasks();
-  }
+  this.loadTasks();
+
+  this.socketService.on(
+    'task:status-updated',
+    this.onTaskStatusUpdated
+  );
+}
+
+private onTaskStatusUpdated = (): void => {
+  this.loadTasks();
+};
 
   loadTasks(): void {
     this.loading = true;
