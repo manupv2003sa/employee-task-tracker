@@ -19,6 +19,7 @@
 
   <ng-container *ngIf="!loading && !errorMessage">
 
+    <!-- Summary Cards -->
     <div class="summary-grid">
 
       <article class="summary-card total-card">
@@ -59,74 +60,105 @@
 
     </div>
 
-    <section class="recent-section">
+    <!-- Chart and Recent Tasks Side by Side -->
+    <div class="dashboard-content-grid">
 
-      <div class="section-header">
-        <div>
-          <h2>Recent Tasks</h2>
-          <p>Your five most recently updated tasks.</p>
+      <!-- Task Status Chart -->
+      <section class="task-status-panel">
+        <app-task-status-chart
+          [todo]="todoCount"
+          [inProgress]="inProgressCount"
+          [completed]="completedCount">
+        </app-task-status-chart>
+      </section>
+
+      <!-- Recent Tasks -->
+      <section class="recent-section">
+
+  
+
+        <div class="table-container" *ngIf="recentTasks.length > 0">
+          
+          <div class="section-header">
+            <div>
+              <h2>Recent Tasks</h2>
+              <p>Your five most recently updated tasks.</p>
+            </div>
+
+            <a routerLink="/my-tasks" class="view-all-link">
+              View All Tasks →
+            </a>
+          </div>
+
+          
+          <table class="tasks-table">
+            <thead>
+              <tr>
+                <th>TASK</th>
+                <th>PRIORITY</th>
+                <th>DUE DATE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let task of recentTasks">
+
+                <td class="task-cell">
+                  <strong [title]="task.title">
+                    {{ task.title }}
+                  </strong>
+                  <p [title]="task.description || 'No description provided.'">
+                    {{ task.description || 'No description provided.' }}
+                  </p>
+                </td>
+
+                <td>
+                  <span
+                    class="priority-badge"
+                    [ngClass]="'priority-' + task.priority.toLowerCase()">
+                    {{ task.priority }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="due-date"
+                    [class.no-date]="!task.dueDate">
+                    {{ task.dueDate
+                      ? (task.dueDate | date:'dd MMM yyyy')
+                      : 'Not set' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="status-badge"
+                    [ngClass]="'status-' + task.status.toLowerCase()">
+                    {{ task.status === 'TODO' ? 'To Do' :
+                       task.status === 'IN_PROGRESS' ? 'In Progress' :
+                       'Completed' }}
+                  </span>
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <a routerLink="/my-tasks" class="view-all-link">
-          View All Tasks →
-        </a>
-      </div>
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="tasks.length === 0">
+          <div class="empty-icon">☷</div>
+          <h3>No tasks assigned yet</h3>
+          <p>
+            Tasks assigned to you by your manager or admin
+            will appear here.
+          </p>
+        </div>
 
-      <div class="table-container" *ngIf="recentTasks.length > 0">
-        <table class="tasks-table">
-          <thead>
-            <tr>
-              <th>TASK</th>
-              <th>PRIORITY</th>
-              <th>DUE DATE</th>
-              <th>STATUS</th>
-            </tr>
-          </thead>
+      </section>
 
-          <tbody>
-            <tr *ngFor="let task of recentTasks">
-              <td class="task-cell">
-                <strong [title]="task.title">{{ task.title }}</strong>
-                <p [title]="task.description || 'No description provided.'">
-                  {{ task.description || 'No description provided.' }}
-                </p>
-              </td>
-
-              <td>
-                <span
-                  class="priority-badge"
-                  [ngClass]="'priority-' + task.priority.toLowerCase()">
-                  {{ task.priority }}
-                </span>
-              </td>
-
-              <td>
-                <span class="due-date" [class.no-date]="!task.dueDate">
-                  {{ task.dueDate ? (task.dueDate | date:'dd MMM yyyy') : 'Not set' }}
-                </span>
-              </td>
-
-              <td>
-                <span
-                  class="status-badge"
-                  [ngClass]="'status-' + task.status.toLowerCase()">
-                  {{ task.status === 'TODO' ? 'To Do' :
-                     task.status === 'IN_PROGRESS' ? 'In Progress' :
-                     'Completed' }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="empty-state" *ngIf="tasks.length === 0">
-        <div class="empty-icon">☷</div>
-        <h3>No tasks assigned yet</h3>
-        <p>Tasks assigned to you by your manager or admin will appear here.</p>
-      </div>
-
-    </section>
+    </div>
 
   </ng-container>
 </section>

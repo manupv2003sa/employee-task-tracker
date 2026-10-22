@@ -42,26 +42,49 @@ export class MainLayout implements OnInit {
   
 
   ngOnInit(): void {
-    this.authService.currentUser$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(user => {
-        this.currentUser = user;
-        this.cdr.detectChanges();
-      });
+  this.authService.currentUser$
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(user => {
+      this.currentUser = user;
+      this.cdr.detectChanges();
+    });
 
-    // Connect Socket.IO and listen for new task notifications
-    const token = this.authService.getToken();
+  const token = this.authService.getToken();
 
-    if (token) {
-      this.socketService.connect(token);
-    }
+  if (token) {
+    this.socketService.connect(token);
+  }
 
-    this.socketService.on<Task>('task:created', this.onTaskCreated);
+  this.socketService.on<Task>('task:created', this.onTaskCreated);
+  this.socketService.on<Task>('task:updated', this.onTaskUpdated);
+  this.socketService.on<Task>('task:status-updated', this.onTaskStatusUpdated);
   }
 
   private onTaskCreated = (task: Task): void => {
     this.toastService.info(`New task assigned: ${task.title}`);
   };
+
+  private onTaskUpdated = (task: Task): void => {
+    this.toastService.info(`task updated: ${task.title}`);
+  };
+
+  private onTaskStatusUpdated = (task: Task): void => {
+    if (
+      this.currentUser?.role === 'ADMIN' ||
+      this.currentUser?.role === 'MANAGER'
+    ) {
+      this.toastService.info(
+        `Task status updated: ${task.title} — ${task.status.replace('_', ' ')}`
+      );
+    }
+  };
+
+  ngOnDestroy(): void {
+    this.socketService.off('task:created', this.onTaskCreated);
+    this.socketService.off('task:updated', this.onTaskUpdated);
+    this.socketService.off('task:status-updated',this.onTaskStatusUpdated);
+  }
+
   navigationItems: NavigationItem[]=[
     {
       label:"Dashoard",

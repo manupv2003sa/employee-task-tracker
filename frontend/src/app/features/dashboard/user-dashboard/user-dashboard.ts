@@ -3,14 +3,14 @@ import { Component, OnInit, inject ,ChangeDetectorRef} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TaskService } from '../../tasks/task.service';
-
 import { Task } from '../../../core/models/task.model';
 
+import { TaskStatusChart } from '../../../shared/task-status-chart/task-status-chart';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe],
+  imports: [CommonModule, RouterLink, DatePipe, TaskStatusChart],
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.scss',
 })

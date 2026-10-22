@@ -13,10 +13,6 @@
       <small>Tasks found</small>
     </div>
   </header>
-
-  <!-- Filters -->
-  <section class="filter-panel">
-
     <div class="search-box">
       <span class="search-icon">⌕</span>
       <input
@@ -26,6 +22,11 @@
         aria-label="Search tasks"
       />
     </div>
+  <!-- Filters -->
+ <section class="filter-panel">
+
+  <div class="filter-group">
+
 
     <select [(ngModel)]="status" aria-label="Filter by status">
       <option value="">All Statuses</option>
@@ -54,32 +55,34 @@
       <option value="asc">Ascending</option>
     </select>
 
-    <button
-      type="button"
-      class="clear-button"
-      (click)="clearFilters()"
-    >
+    <button type="button" class="clear-button" (click)="clearFilters()">
       <span>↺</span> Clear
     </button>
+  </div>
 
+  <div class="action-group">
     <button
       type="button"
       class="export-button"
       (click)="exportTasksToExcel()"
       [disabled]="loading || filteredTasks.length === 0"
-      >
-      <span>📄</span> Export Excel
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      Export Excel
     </button>
 
-    <button
-      type="button"
-      class="create-button"
-      (click)="openCreateTask()"
-    >
+    <button type="button" class="create-button" (click)="openCreateTask()">
       <span>+</span> Create Task
     </button>
+  </div>
 
-  </section>
+</section>
 
   <!-- Table Heading -->
   <div class="results-heading">

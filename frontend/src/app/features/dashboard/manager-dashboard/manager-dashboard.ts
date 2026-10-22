@@ -8,9 +8,10 @@ import { DatePipe } from '@angular/common';
 import { AuthService } from '../../auth/auth.service';
 import { TaskService } from '../../tasks/task.service';
 import { EmployeeService } from '../../employees/employee.service';
+import { TaskStatusChart } from '../../../shared/task-status-chart/task-status-chart';
 
 @Component({
-  imports: [RouterLink, DatePipe, CommonModule],
+  imports: [RouterLink, DatePipe, CommonModule, TaskStatusChart],
   selector: 'app-manager-dashboard',
   styleUrl: '../admin-dashboard/admin-dashboard.scss',
   templateUrl: '../admin-dashboard/admin-dashboard.html'

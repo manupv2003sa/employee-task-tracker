@@ -9,9 +9,10 @@ import { DatePipe } from '@angular/common';
 import { AuthService } from '../../auth/auth.service';
 import { EmployeeService } from '../../employees/employee.service';
 import { TaskService } from '../../tasks/task.service';
+import { TaskStatusChart } from '../../../shared/task-status-chart/task-status-chart';
 
 @Component({
-  imports: [RouterLink, DatePipe, CommonModule],
+  imports: [RouterLink, DatePipe, CommonModule, TaskStatusChart],
   selector: 'app-admin-dashboard',
   styleUrl: './admin-dashboard.scss',
   templateUrl: './admin-dashboard.html',
@@ -23,7 +24,6 @@ export class AdminDashboard implements OnInit{
   private taskService = inject (TaskService);
 
   private authService =inject(AuthService);
-
 
   currentRole = this.authService.getCurrentUser()?.role;
  

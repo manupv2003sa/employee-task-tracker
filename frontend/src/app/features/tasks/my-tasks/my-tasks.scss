@@ -440,22 +440,36 @@
   flex-wrap: wrap;
 }
 
-.export-btn {
-  margin-left: auto;
-  flex-shrink: 0;
+
+
+
+.export-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 10px 16px;
-  background: #3158e8;
-  color: #fff;
-  border: none;
+  border: 1px solid #15803d;
   border-radius: 8px;
+  background: #15803d;
+  color: #ffffff;
+  font: inherit;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 0.2s ease;
 }
 
-.export-btn:hover {
-  background: #2446c7;
+.export-btn:hover:not(:disabled) {
+  background: #166534;
 }
+
+.export-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
 
 @media (max-width: 650px) {
   .toolbar {

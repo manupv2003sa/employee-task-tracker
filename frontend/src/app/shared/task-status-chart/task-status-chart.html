@@ -1,0 +1,47 @@
+
+<section class="chart-panel">
+  <div class="chart-header">
+    <div>
+      <h3>Task Status Distribution</h3>
+      <p>Overview of task progress</p>
+    </div>
+
+    <span class="total-badge">
+      {{ totalTasks }} Tasks
+    </span>
+  </div>
+
+  <div class="chart-visual">
+    <canvas
+      baseChart
+      [type]="doughnutChartType"
+      [data]="doughnutChartData"
+      [options]="doughnutChartOptions">
+    </canvas>
+
+    <div class="chart-center">
+      <strong>{{ totalTasks }}</strong>
+      <span>Total Tasks</span>
+    </div>
+  </div>
+
+  <div class="chart-legend">
+    <div class="legend-item">
+      <span class="legend-dot todo-dot"></span>
+      <span>To Do</span>
+      <strong>{{ todo }}</strong>
+    </div>
+
+    <div class="legend-item">
+      <span class="legend-dot progress-dot"></span>
+      <span>In Progress</span>
+      <strong>{{ inProgress }}</strong>
+    </div>
+
+    <div class="legend-item">
+      <span class="legend-dot completed-dot"></span>
+      <span>Completed</span>
+      <strong>{{ completed }}</strong>
+    </div>
+  </div>
+</section>

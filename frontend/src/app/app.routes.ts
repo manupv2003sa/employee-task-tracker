@@ -5,7 +5,7 @@ import { ManagerDashboard } from './features/dashboard/manager-dashboard/manager
 import { UserDashboard } from './features/dashboard/user-dashboard/user-dashboard';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
-import { MainLayout } from './shared/layout/main-layout/main-layout';
+import {MainLayout} from './shared/layout/main-layout/main-layout';
 import { EmployeeList } from './features/employees/employee-list/employee-list';
 import { ProfileComponent } from './features/profile/profile/profile';
 import { ChangePassword } from './features/profile/change-password/change-password';
