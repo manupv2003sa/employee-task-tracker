@@ -1,6 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, BehaviorSubject } from "rxjs";
+import { SocketService } from "../../core/services/socket.service";
 
 
 export interface LoginResponse{
@@ -27,7 +28,7 @@ export type CurrentUser = LoginResponse['data']['user'];
 })
 export class AuthService{
     private http = inject(HttpClient);
-
+    private socketService = inject(SocketService);
    
     private apiUrl='http://localhost:3000/api/auth';
 
@@ -44,11 +45,16 @@ export class AuthService{
             {email,password}
         );
     }
-    saveSession(response:LoginResponse):void{
-        localStorage.setItem('authToken',response.data.token);
-        localStorage.setItem('currentUser',JSON.stringify(response.data.user));
+    saveSession(response: LoginResponse): void {
+        localStorage.setItem('authToken', response.data.token);
+        localStorage.setItem(
+            'currentUser',
+            JSON.stringify(response.data.user)
+        );
 
         this.CurrentUserSubject.next(response.data.user);
+
+        this.socketService.connect(response.data.token);
     }
 
     getToken():string | null{
@@ -80,11 +86,12 @@ export class AuthService{
     }
 
     logout(): void {
+        this.socketService.disconnect();
+
         localStorage.removeItem('authToken');
         localStorage.removeItem('currentUser');
 
         this.CurrentUserSubject.next(null);
     }
-
 
 }

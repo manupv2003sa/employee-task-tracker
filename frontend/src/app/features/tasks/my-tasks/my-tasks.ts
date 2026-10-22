@@ -1,9 +1,13 @@
-import { Component, OnInit, inject ,ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, inject ,ChangeDetectorRef, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {  TaskService } from '../task.service';
 import { Task } from '../../../core/models/task.model';
 import {ExcelExportService} from '../../../core/services/excel-export';
+
+import { SocketService } from '../../../core/services/socket.service';
+import { AuthService } from '../../auth/auth.service';
+import { ToastService } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-my-tasks',
@@ -12,10 +16,14 @@ import {ExcelExportService} from '../../../core/services/excel-export';
   templateUrl: './my-tasks.html',
   styleUrl: './my-tasks.scss',
 })
-export class MyTasks implements OnInit {
+export class MyTasks implements OnInit,OnDestroy  {
   private taskService = inject(TaskService);
   private cdr =inject(ChangeDetectorRef);
   private excelExportService = inject(ExcelExportService);
+
+  private socketService = inject(SocketService);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   tasks: Task[] = [];
 
@@ -28,7 +36,20 @@ export class MyTasks implements OnInit {
   statusFilter: '' | Task['status'] = '';
 
   ngOnInit(): void {
+
+    const token = this.authService.getToken();
+
+    if (token) {
+      this.socketService.connect(token);
+    }
+
+    this.socketService.on<Task>('task:created', this.onTaskCreated);
+
     this.loadMyTasks();
+  }
+
+  ngOnDestroy(): void {
+    this.socketService.off('task:created', this.onTaskCreated);
   }
 
   // Load tasks assigned to the logged-in user
@@ -138,4 +159,9 @@ export class MyTasks implements OnInit {
       false
     );
   }
+
+  private onTaskCreated = (task: Task): void => {
+    this.loadMyTasks();
+
+  };
 }

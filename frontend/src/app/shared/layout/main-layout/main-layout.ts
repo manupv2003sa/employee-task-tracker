@@ -8,6 +8,9 @@ import {
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../features/auth/auth.service';
+import { SocketService } from '../../../core/services/socket.service';
+import { Task } from '../../../core/models/task.model';
+import { ToastService } from '../../../core/services/toast';
 
 interface NavigationItem{
   label:string;
@@ -30,19 +33,35 @@ export class MainLayout implements OnInit {
   private router = inject(Router);
   private destroyRef =inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+  private socketService = inject(SocketService);
+  private toastService = inject(ToastService);  
 
   currentUser =this.authService.getCurrentUser();
+
+
+  
 
   ngOnInit(): void {
     this.authService.currentUser$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(user =>{
-        this.currentUser =user;
+      .subscribe(user => {
+        this.currentUser = user;
         this.cdr.detectChanges();
-
       });
+
+    // Connect Socket.IO and listen for new task notifications
+    const token = this.authService.getToken();
+
+    if (token) {
+      this.socketService.connect(token);
+    }
+
+    this.socketService.on<Task>('task:created', this.onTaskCreated);
   }
 
+  private onTaskCreated = (task: Task): void => {
+    this.toastService.info(`New task assigned: ${task.title}`);
+  };
   navigationItems: NavigationItem[]=[
     {
       label:"Dashoard",

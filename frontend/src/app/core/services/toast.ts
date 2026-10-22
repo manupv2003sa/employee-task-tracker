@@ -24,6 +24,14 @@ export class ToastService {
         this.show('error',message);
     }
 
+    warning(message: string): void {
+        this.show('warning', message);
+    }
+
+    info(message: string): void {
+        this.show('info', message);
+    }
+
 
     private show(type:ToastMessage['type'],
                  message:string

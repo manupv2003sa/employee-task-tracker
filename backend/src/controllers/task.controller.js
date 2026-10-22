@@ -29,6 +29,13 @@ async function addTask(req,res) {
             req.user.userId
         );
 
+        const io = req.app.get("io");
+
+        if (io) {
+            io.to(`user:${assignedTo}`).emit("task:created", task);
+          
+        }
+
         return res.status(201).json({
             success: true,
             data :task
