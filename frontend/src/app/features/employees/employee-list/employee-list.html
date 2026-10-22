@@ -298,7 +298,20 @@
         <tbody>
           @for (employee of employees; track employee.id) {
             <tr>
-              <td>{{ employee.name }}</td>
+              <td>
+                <div class="employee-info">
+                  <img
+                    class="employee-avatar"
+                    [src]="employee.profilePicture
+                      ? 'http://localhost:3000' + employee.profilePicture
+                      : '/default-avatar.png'"
+                    [alt]="employee.name"
+                    (error)="onProfileImageError($event)"
+                  />
+                  <span>{{ employee.name }}</span>
+                </div>
+              </td>              
+              
               <td>{{ employee.email }}</td>
               <td>{{ employee.role }}</td>
 

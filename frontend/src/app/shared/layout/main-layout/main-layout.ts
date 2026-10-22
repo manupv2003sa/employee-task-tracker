@@ -101,8 +101,10 @@ export class MainLayout implements OnInit {
       return '/default-avatar.png';
     }
 
-    return `http://localhost:3000${profilePicture}`;
-  }
+    return profilePicture
+        ? `http://localhost:3000${profilePicture}`
+        : '/default-avatar.png';  
+      }
 
   onAvatarError(event: Event): void {
     const img = event.target as HTMLImageElement;

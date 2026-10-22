@@ -68,7 +68,7 @@
       (click)="exportTasksToExcel()"
       [disabled]="loading || filteredTasks.length === 0"
       >
-      <span>↓</span> Export Excel
+      <span>📄</span> Export Excel
     </button>
 
     <button
@@ -168,10 +168,26 @@
             </td>
 
             <!-- Assignee: No Avatar -->
+           <!-- Assignee with Profile Picture -->
             <td>
-              <span class="assignee-name">
-                {{ task.assignee?.name || 'Unassigned' }}
-              </span>
+              <div class="assignee-info" *ngIf="task.assignee; else unassigned">
+                <img
+                  class="assignee-avatar"
+                  [src]="task.assignee.profilePicture
+                    ? 'http://localhost:3000' + task.assignee.profilePicture
+                    : '/default-avatar.png'"
+                  [alt]="task.assignee.name"
+                  (error)="onProfileImageError($event)"
+                />
+
+                <span class="assignee-name">
+                  {{ task.assignee.name }}
+                </span>
+              </div>
+
+              <ng-template #unassigned>
+                <span class="assignee-name">Unassigned</span>
+              </ng-template>
             </td>
 
             <!-- Due Date -->

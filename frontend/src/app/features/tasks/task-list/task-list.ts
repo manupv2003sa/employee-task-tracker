@@ -218,6 +218,11 @@ export class TaskList implements OnInit {
     );
   }
 
+
+  onProfileImageError(event: Event): void {
+    (event.target as HTMLImageElement).src = '/default-avatar.png';
+  }
+
   clearFilters(): void {
     this.search = '';
     this.status = '';

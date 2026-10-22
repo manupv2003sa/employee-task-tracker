@@ -7,6 +7,8 @@ export interface Employee {
   email: string;
   role: EmployeeRole;
   isActive: boolean;
+  profilePicture: string | null;
+
 }
 
 export interface CreateEmployeeRequest {

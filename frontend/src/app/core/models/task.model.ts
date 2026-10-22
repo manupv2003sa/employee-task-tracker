@@ -21,6 +21,7 @@ export interface Task {
   assignee: {
     id: string;
     name: string;
+    profilePicture?: string | null;
   } | null;
 
   dueDate: string | null;

@@ -61,21 +61,21 @@ export class AuthService{
         return user ? JSON.parse(user) as CurrentUser :null;
     }
 
-    updateCurrentUserName(name: string): void {
-    const currentUser = this.getCurrentUser();
+    updateCurrentUserName(name: string, profilePicture?: string | null): void {
+        const currentUser = this.getCurrentUser();
 
-    if (!currentUser) return;
+        if (!currentUser) return;
 
-    const updatedUser: CurrentUser = {
-        id: currentUser.id,
-        name: name,
-        email: currentUser.email,
-        role: currentUser.role,
-        profilePicture: currentUser.profilePicture
-    };
+        const updatedUser: CurrentUser = {
+            id: currentUser.id,
+            name: name,
+            email: currentUser.email,
+            role: currentUser.role,
+            profilePicture: profilePicture ?? currentUser.profilePicture
+        };
 
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    this.CurrentUserSubject.next(updatedUser);
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        this.CurrentUserSubject.next(updatedUser);
 
     }
 

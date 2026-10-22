@@ -61,6 +61,8 @@ export class EmployeeList implements OnInit {
 
   successMessage = '';
 
+
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.isFilterOpen) {
@@ -169,6 +171,10 @@ export class EmployeeList implements OnInit {
         this.totalEmployees = response.pagination.total;
         this.totalPages = response.pagination.totalPages;
         this.isLoading = false;
+
+
+        console.log('Employees from API:', this.employees);
+
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -237,5 +243,11 @@ export class EmployeeList implements OnInit {
         this.toastService.error('Unable to delete employee.');
       }
     });
+  }
+
+
+
+  onProfileImageError(event: Event): void {
+    (event.target as HTMLImageElement).src = '/default-avatar.png';
   }
 }

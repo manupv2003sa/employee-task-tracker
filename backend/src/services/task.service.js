@@ -150,7 +150,7 @@ async function searchTasks(search, status,priority, sortBy,order) {
             {
             model:User,
             as : "assignee",
-            attributes:["id", "name"],
+            attributes:["id", "name", "profilePicture"],
             },
         ],
         order:[[sortField,sortOrder.toUpperCase()]]

@@ -144,6 +144,7 @@ async function getUsers(
             "email",
             "role",
             "isActive",
+            "profilePicture",
             "createdAt",
             "updatedAt"
         ],

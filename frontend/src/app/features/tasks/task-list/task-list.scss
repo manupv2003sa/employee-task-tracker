@@ -636,3 +636,21 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.assignee-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assignee-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.assignee-name {
+  white-space: nowrap;
+}

@@ -152,6 +152,11 @@ export class ProfileComponent implements OnInit{
             ...this.profile,
             profilePicture: response.data.profilePicture
           };
+
+          this.authService.updateCurrentUserName(
+            this.profile.name,
+            response.data.profilePicture
+          );
         }
 
         this.selectedFile = null;
@@ -171,14 +176,15 @@ export class ProfileComponent implements OnInit{
 
       error: (error) => {
         this.isUploadingPhoto = false;
-
         this.toastService.error(
           error.error?.message || 'Failed to upload profile picture.'
         );
-        
       }
-    });
-  }
+  });
+}
+      
+          
+    
 
   getProfilePictureUrl(): string {
     const path = this.profile?.profilePicture;
