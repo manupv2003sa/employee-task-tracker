@@ -1,7 +1,7 @@
 
 <div class="task-form-container">
   <div class="form-header">
-    <h2><h2>{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h2></h2>
+    <h2>{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h2>
     <p>Assign a task to an employee and set its due date.</p>
   </div>
 
@@ -119,7 +119,8 @@
               {{ isSubmitting
                 ? 'Saving...'
                 : (isEditMode ? 'Save Changes' : 'Create Task') }}        
-          </button>
+        </button>
         </div>
-
+      </form>
+</div>
 

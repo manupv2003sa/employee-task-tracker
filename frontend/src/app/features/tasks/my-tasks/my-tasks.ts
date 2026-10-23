@@ -44,12 +44,13 @@ export class MyTasks implements OnInit,OnDestroy  {
     }
 
     this.socketService.on<Task>('task:created', this.onTaskCreated);
-
+    this.socketService.on<Task>('task:updated', this.onTaskUpdated);
     this.loadMyTasks();
   }
 
   ngOnDestroy(): void {
     this.socketService.off('task:created', this.onTaskCreated);
+    this.socketService.off('task:updated', this.onTaskUpdated);
   }
 
   // Load tasks assigned to the logged-in user
@@ -162,6 +163,9 @@ export class MyTasks implements OnInit,OnDestroy  {
 
   private onTaskCreated = (task: Task): void => {
     this.loadMyTasks();
+  };
 
+  private onTaskUpdated = (task: Task): void => {
+    this.loadMyTasks();
   };
 }

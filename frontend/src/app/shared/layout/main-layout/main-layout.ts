@@ -65,7 +65,8 @@ export class MainLayout implements OnInit {
   };
 
   private onTaskUpdated = (task: Task): void => {
-    this.toastService.info(`task updated: ${task.title}`);
+
+    this.toastService.info(`Task updated: ${task.title}`);
   };
 
   private onTaskStatusUpdated = (task: Task): void => {
@@ -144,7 +145,7 @@ export class MainLayout implements OnInit {
     }
 
     return profilePicture
-        ? `http://localhost:3000${profilePicture}`
+        ? `http://192.168.0.127:3000${profilePicture}`
         : '/default-avatar.png';  
       }
 

@@ -42,6 +42,7 @@ export interface CreateTaskRequest {
   description?: string;
   priority: TaskPriority;
   assignedTo: string;
+  dueDate?: string;
 }
 
 export interface UpdateTaskRequest {
@@ -49,6 +50,7 @@ export interface UpdateTaskRequest {
   description?: string;
   priority?: TaskPriority;
   status?: TaskStatus;
+  assignedTo?: string;
   dueDate?: string;
 }
 

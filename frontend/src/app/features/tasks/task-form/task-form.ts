@@ -42,8 +42,6 @@ export class TaskForm implements OnInit,OnChanges {
     return !!this.selectedTask
   }
   cancelCreateTask():void{
-    console.log('Cancel button clicked');
-
     this.cancel.emit();
   }
 

@@ -30,7 +30,7 @@ export class AuthService{
     private http = inject(HttpClient);
     private socketService = inject(SocketService);
    
-    private apiUrl='http://localhost:3000/api/auth';
+    private apiUrl='http://192.168.0.127:3000/api/auth';
 
      private CurrentUserSubject = new BehaviorSubject<any | null>(
         this.getCurrentUser()

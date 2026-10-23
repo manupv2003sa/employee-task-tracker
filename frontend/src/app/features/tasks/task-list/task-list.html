@@ -177,7 +177,7 @@
                 <img
                   class="assignee-avatar"
                   [src]="task.assignee.profilePicture
-                    ? 'http://localhost:3000' + task.assignee.profilePicture
+                    ? 'http://192.168.0.127:3000' + task.assignee.profilePicture
                     : '/default-avatar.png'"
                   [alt]="task.assignee.name"
                   (error)="onProfileImageError($event)"

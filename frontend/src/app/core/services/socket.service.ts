@@ -23,7 +23,7 @@ export class SocketService {
       return;
     }
 
-    this.socket = io('http://localhost:3000', {
+    this.socket = io('http://192.168.0.127:3000', {
       autoConnect: false,
       auth: { token },
     });

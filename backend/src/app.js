@@ -10,7 +10,7 @@ const profileRoutes = require("./routes/profile.routes");
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:4200"
+    origin: "http://192.168.0.127:4200"
 }));
 app.use(express.json());
 

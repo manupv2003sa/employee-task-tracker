@@ -18,7 +18,7 @@ import {
 })
 export class EmployeeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'http://192.168.0.127:3000/api';
 
   createEmployee(
     employee: CreateEmployeeRequest

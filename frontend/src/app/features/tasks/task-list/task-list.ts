@@ -3,6 +3,7 @@ import {
   OnInit,
   inject,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +23,7 @@ import { SocketService } from '../../../core/services/socket.service';
   styleUrl: './task-list.scss',
   templateUrl: './task-list.html',
 })
-export class TaskList implements OnInit {
+export class TaskList implements OnInit,OnDestroy {
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject (ToastService);
@@ -73,17 +74,26 @@ export class TaskList implements OnInit {
   };
 
   ngOnInit(): void {
-  this.loadTasks();
+    this.loadTasks();
 
-  this.socketService.on(
-    'task:status-updated',
-    this.onTaskStatusUpdated
-  );
-}
+    this.socketService.on<Task>(
+      'task:status-updated',
+      this.onTaskStatusUpdated
+    );
+  }
 
-private onTaskStatusUpdated = (): void => {
-  this.loadTasks();
-};
+  private onTaskStatusUpdated = (task: Task): void => {
+    this.loadTasks();
+  };
+
+
+  ngOnDestroy(): void {
+    this.socketService.off(
+      'task:status-updated',
+      this.onTaskStatusUpdated
+    );
+  }
+
 
   loadTasks(): void {
     this.loading = true;

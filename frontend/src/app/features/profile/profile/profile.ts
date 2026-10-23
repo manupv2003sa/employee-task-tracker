@@ -189,7 +189,7 @@ export class ProfileComponent implements OnInit{
   getProfilePictureUrl(): string {
     const path = this.profile?.profilePicture;
 
-    return path ? `http://localhost:3000${path}` : '';
+    return path ? `http://192.168.0.127:3000${path}` : '';
   }
 }
 

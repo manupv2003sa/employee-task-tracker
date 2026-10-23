@@ -172,9 +172,6 @@ export class EmployeeList implements OnInit {
         this.totalPages = response.pagination.totalPages;
         this.isLoading = false;
 
-
-        console.log('Employees from API:', this.employees);
-
         this.cdr.detectChanges();
       },
       error: (error) => {

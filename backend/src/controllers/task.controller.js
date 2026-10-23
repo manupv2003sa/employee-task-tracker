@@ -62,6 +62,12 @@ async function editTaskController(req, res) {
         const { id } = req.params;
         const task = await editTask(id, req.body);
 
+        const io = req.app.get("io");
+
+        if (io && task.assignedTo) {
+            io.to(`user:${task.assignedTo}`).emit("task:updated", task);
+        }
+
         return res.status(200).json({
             success: true,
             data: task
@@ -153,7 +159,6 @@ async function updateMyTaskStatusController(req,res) {
             data: task,
         });
     }catch(error){
-        console.log(error)
         if (error.message==="Task not found"){
             return res.status(404).json({
                 success:false,

@@ -62,8 +62,8 @@ async function authenticateToken(req,res,next){
     }catch(error){
 
         if(
-            error.name==="TokenExpiredError",
-            error.name==="JsonWebTokenError",
+            error.name==="TokenExpiredError" ||
+            error.name==="JsonWebTokenError" ||
             error.name==="NotBeforeError"
         ){
             return res.status(401).json({
