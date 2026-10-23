@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+
+
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest"
-  },
+  "test": "cross-env NODE_ENV=test jest",
+  "test:coverage": "cross-env NODE_ENV=test jest --coverage",
+  "test:watch": "cross-env NODE_ENV=test jest --watch"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

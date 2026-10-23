@@ -189,6 +189,15 @@ async function getUsers(req,res) {
                 }
             });
     }catch(error){
+        if (
+            error.message === "Invalid role filter" ||
+            error.message === "Invalid status filter"
+        ) {
+            return res.status(400).json({
+            success: false,
+            message: error.message,
+            });
+        }
         res.status(500).json({
             success:false,
             message: error.message,
