@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 import { Task } from '../../../core/models/task.model';
 import { TaskService } from '../../tasks/task.service';
@@ -24,6 +25,7 @@ import { SocketService } from '../../../core/services/socket.service';
   templateUrl: './task-list.html',
 })
 export class TaskList implements OnInit,OnDestroy {
+  readonly environment = environment;
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject (ToastService);

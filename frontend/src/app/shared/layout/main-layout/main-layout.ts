@@ -11,6 +11,7 @@ import { AuthService } from '../../../features/auth/auth.service';
 import { SocketService } from '../../../core/services/socket.service';
 import { Task } from '../../../core/models/task.model';
 import { ToastService } from '../../../core/services/toast';
+import { environment } from '../../../../environments/environment';
 
 interface NavigationItem{
   label:string;
@@ -145,9 +146,9 @@ export class MainLayout implements OnInit {
     }
 
     return profilePicture
-        ? `http://192.168.0.127:3000${profilePicture}`
-        : '/default-avatar.png';  
-      }
+      ? `${environment.serverUrl}${profilePicture}`
+      : '/default-avatar.png';
+  }
 
   onAvatarError(event: Event): void {
     const img = event.target as HTMLImageElement;

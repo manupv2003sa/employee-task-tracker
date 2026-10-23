@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { ToastService } from '../../../core/services/toast';
 import { ProfileService, Profile } from '../profile.service';
+import { environment } from '../../../../environments/environment';
 @Component({
   imports: [FormsModule, CommonModule],
   standalone: true,
@@ -189,7 +190,7 @@ export class ProfileComponent implements OnInit{
   getProfilePictureUrl(): string {
     const path = this.profile?.profilePicture;
 
-    return path ? `http://192.168.0.127:3000${path}` : '';
+    return path ? `${environment.serverUrl}${path}` : '';
   }
 }
 

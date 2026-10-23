@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, BehaviorSubject } from "rxjs";
 import { SocketService } from "../../core/services/socket.service";
+import { environment } from "../../../environments/environment";
 
 
 export interface LoginResponse{
@@ -30,8 +31,7 @@ export class AuthService{
     private http = inject(HttpClient);
     private socketService = inject(SocketService);
    
-    private apiUrl='http://192.168.0.127:3000/api/auth';
-
+    private apiUrl = `${environment.apiUrl}/auth`;
      private CurrentUserSubject = new BehaviorSubject<any | null>(
         this.getCurrentUser()
     );

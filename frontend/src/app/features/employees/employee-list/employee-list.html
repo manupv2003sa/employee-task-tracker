@@ -300,10 +300,10 @@
             <tr>
               <td>
                 <div class="employee-info">
-                  <img
+                 <img
                     class="employee-avatar"
                     [src]="employee.profilePicture
-                      ? 'http://192.168.0.127:3000' + employee.profilePicture
+                      ? environment.serverUrl + employee.profilePicture
                       : '/default-avatar.png'"
                     [alt]="employee.name"
                     (error)="onProfileImageError($event)"

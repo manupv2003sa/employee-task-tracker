@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class SocketService {
       return;
     }
 
-    this.socket = io('http://192.168.0.127:3000', {
+      this.socket = io(environment.socketUrl, {
       autoConnect: false,
       auth: { token },
     });

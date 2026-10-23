@@ -11,6 +11,7 @@ import {
   CreateTaskRequest,
   UpdateTaskRequest
 } from '../../core/models/task.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn:"root"
@@ -18,7 +19,7 @@ import {
 
 export class TaskService {
     private http= inject(HttpClient);
-    private apiUrl = 'http://192.168.0.127:3000/api/tasks';
+    private apiUrl =`${environment.apiUrl}/tasks`;
 
     
         

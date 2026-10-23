@@ -9,6 +9,7 @@ import {
   signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 import { EmployeeService } from '../employee.service';
 import { EmployeeForm } from '../employee-form/employee-form';
@@ -24,6 +25,8 @@ import { Employee } from '../../../core/models/employee.model';
   styleUrl: './employee-list.scss'
 })
 export class EmployeeList implements OnInit {
+
+  readonly environment = environment;
   private toastService = inject(ToastService);
   private employeeService = inject(EmployeeService);
   private cdr = inject(ChangeDetectorRef);

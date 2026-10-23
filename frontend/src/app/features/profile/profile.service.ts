@@ -1,6 +1,7 @@
 import { inject, Injectable} from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { environment } from '../../../environments/environment';
 
 
 interface ApiResponse<T>{
@@ -36,8 +37,7 @@ export interface ChangePasswordRequest{
 export class ProfileService{
 
     private http = inject(HttpClient);
-    private apiUrl ='http://192.168.0.127:3000/api/profile';
-    
+    private apiUrl = `${environment.apiUrl}/profile`;    
     getProfile(): Observable<ApiResponse<Profile>>{
         return this.http.get<ApiResponse<Profile>>(this.apiUrl);
     }
@@ -68,7 +68,7 @@ export class ProfileService{
             message: string;
             data: {profilePicture: string};
         }>(
-            'http://192.168.0.127:3000/api/profile/picture',
+            `${environment.apiUrl}/profile/picture`,
             formData
         );
     }
