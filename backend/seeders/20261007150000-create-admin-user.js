@@ -22,7 +22,7 @@ module.exports={
 
   async down(queryInterface) {
     await queryInterface.bulkDelete("users", {
-      email: "Admin@example.com",
+      email: "Admin@gmail.com",
     });
   },
 };
